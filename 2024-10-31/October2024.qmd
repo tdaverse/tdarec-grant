@@ -28,7 +28,7 @@ The primary workhorse for TDA is [ripser](http://ripser.org/), which efficiently
 Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
 :::
 
-The new package would provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable {recipes} extension for association rules^[https://github.com/corybrunson/arulesteps].
+The new package would provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable [{recipes}](https://recipes.tidymodels.org) extension for association rules^[https://github.com/corybrunson/arulesteps].
 
 #### Aim 2
 
@@ -137,31 +137,22 @@ We need to investigate further whether we can only take inspiration from its API
 
 ## Issues
 
+### Modification to SA1
+
+JBR discovered that some relatively new TDA researchers and software developers had published a package that accomplishes part of the first aim of our proposal.
+
+::: {.callout-tip icon="false" title="The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package"}
+The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package provides efficient [{Rcpp}](https://www.rcpp.org)-enabled implementations of several vectorizations of persistence data, including Betti curves (called functions), persistence landscapes, and persistence images (called surfaces). It exports an `R` function for each vectorization method using consistent conventions. It is not designed to interface with other TDA packages except [{TDA}](https://cran.r-project.org/package=TDA) and could not be conveniently built in to a [tidymodels](https://www.tidymodels.org) workflow.
+:::
+ 
+The package was originally published on CRAN in 2022^[https://cran.r-project.org/package=TDAvec], with [{TDA}](https://cran.r-project.org/package=TDA) as a dependency; it was presumably temporarily archived during the same intervals as [{TDA}](https://cran.r-project.org/package=TDA). JBR discovered it while reviewing [{TDA}](https://cran.r-project.org/package=TDA) dependencies. The GitHub repository was only just made public^[https://github.com/uislambekov/TDAvec]. Its author Dr. Islambekov, together with Drs. Luchinsky and Pathirana among others, recently published two articles and completed one thesis on contributions to the package and studies to which it was applied [@chan2022computationally;@islambekov2023vector;@pathirana2023efficient].
+ 
+::: {.callout-tip icon="false" title="Proposed modification to Aim 1"}
+Before finding [{TDAvec}](https://cran.r-project.org/package=TDAvec), we had already planned to build two packages for Aim 1: [{TDAvec}](https://cran.r-project.org/package=TDAvec), which would implement vectorizations, and [{tdarec}](https://github.com/corybrunson/tdarec), an extension to [{recipes}](https://recipes.tidymodels.org) that would integrate them into [tidymodels](https://www.tidymodels.org). We propose therefore (1a) to contribute additional vectorization methods to [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described in the original proposal and (1b) to write [{tdarec}](https://github.com/corybrunson/tdarec) with [{TDAvec}](https://cran.r-project.org/package=TDAvec) its primary dependency (other than [{recipes}](https://recipes.tidymodels.org)).
+:::
+ 
+JBR has contacted Drs. Islambekov, Luchinsky, and Pathirana with this idea, and they are open to our collaboration with them on [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described, along with some other goals for the package. Because they have already built an efficient standard and several vectorizations, we expect the final product to be more comprehensive and mature than it otherwise would have been.
+
+### Minor things to be fixed
+
 - [{ripserr}](https://tdaverse.github.io/ripserr/) repo and CRAN pages do not reference the correct website URL following migration to the [tdaverse](https://github.com/tdaverse) organization.
-
-### News in the recent literature
-
-I discovered last week that some relatively new TDA researchers and software developers had published a package that accomplishes part of the first aim of our proposal. In this email i'll describe their contribution and  propose a modification to our first aim.
- 
-The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package
- 
-The package [{TDAvec}](https://cran.r-project.org/package=TDAvec) provides efficient {Rcpp}-enabled implementations of several vectorizations of persistence data, including Betti curves (called functions), persistence landscapes, and persistence images (called surfaces). It exports an R function for each vectorization method using consistent conventions. It is not designed to interface with other TDA packages except {TDA} and could not be conveniently built in to a Tidymodels workflow.
- 
-The package was originally published on CRAN in 2022 [1], with {TDA} as a dependency; it was presumably temporarily archived during the same intervals as {TDA}. (I discovered it while reviewing {TDA} dependencies.) The GitHub repository was only just made public [2]. Its author Dr. Islambekov, together with Drs. Luchinsky and Pathirana among others, recently published two articles and completed one thesis on contributions to the package and studies to which it was applied [3,4,5].
- 
-Proposed modification to Aim 1
- 
-Before finding [{TDAvec}](https://cran.r-project.org/package=TDAvec), we had already planned to build two packages for Aim 1: [{TDAvec}](https://cran.r-project.org/package=TDAvec), which would implement vectorizations, and [{tdarec}](https://github.com/corybrunson/tdarec), an extension to {recipes} that would integrate them into Tidymodels. We propose therefore
-(1a) to contribute additional vectorization methods to [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described in the original proposal and (1b) to write [{tdarec}](https://github.com/corybrunson/tdarec) with [{TDAvec}](https://cran.r-project.org/package=TDAvec) its primary dependency (other than {recipes}).
- 
-I have contacted Drs. Islambekov, Luchinsky, and Pathirana with this idea, and they are open to our collaboration with them on [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described, along with some other goals for the package. Because they have already built an efficient standard and several vectorizations, we expect the final product to be more comprehensive and mature than it otherwise would have been.
- 
-I apologize for the omission from our original proposal and would be glad to answer further questions or take other requested steps.
- 
-Cory Brunson
- 
-[1] https://cran.r-project.org/package=TDAvec
-[2] https://github.com/uislambekov/TDAvec
-[3] https://www.jmlr.org/papers/v23/21-1129.html
-[4] https://etd.ohiolink.edu/acprod/odb_etd/etd/r/1501/10?clear=10&p10_accession_num=bgsu1680226819017686
-[5] https://www.aimsciences.org/article/doi/10.3934/fods.2024002
