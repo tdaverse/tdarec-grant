@@ -129,7 +129,7 @@ Vectorization effectively pushes diagrams into a functional space for which we c
 
 #### Seamless integration within [tidymodels](https://www.tidymodels.org)
 
-The [tidymodels](https://www.tidymodels.org) ecosystem of packages has the [{infer}](https://infer.tidymodels.org/) package which is dedicated to performing statistical inference using an expressive statistical grammar that coheres with the tidyverse design framework.
+The [tidymodels](https://www.tidymodels.org) ecosystem of packages has the [{infer}](https://infer.tidymodels.org/) package which is dedicated to performing statistical inference using an expressive statistical grammar that coheres with the [tidyverse](https://www.tidyverse.org) design framework.
 
 We need to investigate further whether we can only take inspiration from its API or we can make it work together with {tdainfer}.
 
