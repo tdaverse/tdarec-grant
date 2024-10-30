@@ -1,0 +1,127 @@
+---
+title: "Integrating topological data analytic tools into the tidy data analysis and machine learning ecosystems"
+subtitle: "R Consortium 2024 ISC Grant"
+author: Aymeric Stamm
+date: today
+format: html
+toc: true
+bibliography: references.bib
+---
+
+## Proposal
+
+Our **goal** is to seamlessly integrate popular techniques from topological data analysis (TDA) into common statistical workflows in R. The **expected benefit** is that these extensions will be more widely used by non-specialist researchers and analysts, which will create sufficient awareness and interest in the community to extend the individual packages and the collection.
+
+### Overview
+
+The [tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a [tidymodels](https://www.tidymodels.org/)-compatible R package.
+
+TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a [tidymodels](https://www.tidymodels.org/)-compatible package for permutation-based hypothesis testing with topological data.
+
+The primary workhorse for TDA is [ripser](http://ripser.org/), which efficiently computes Vietoris–Rips filtrations. The engine used in the lightweight wrapper package [{ripserr}](https://tdaverse.github.io/ripserr/) is missing key features, so our **third aim** is to upgrade it.
+
+### Specific Aims
+
+#### Aim 1
+
+::: {.callout-tip icon="false" title="Recipes for TDA"}
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+:::
+
+The new package would provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable {recipes} extension for association rules^[https://github.com/corybrunson/arulesteps].
+
+#### Aim 2
+
+::: {.callout-tip icon="false" title="Inference for TDA"}
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with [tidymodels](https://www.tidymodels.org/) workflows.
+:::
+
+Dr. Stamm leads a coordinated package collection for permutation-based inference, with the published [{flipr}](https://lmjl-alea.github.io/flipr/) package at its center. This package features (i) implementations of classic permutation schemes that are agnostic to the type of input and (ii) the central [`PlausibilityFunction`](https://lmjl-alea.github.io/flipr/reference/PlausibilityFunction.html) [{R6}](https://r6.r-lib.org) class for seamless hypothesis testing and confidence estimation. Several extensions are published or in development for specific data types, including [{nevada}](https://astamm.github.io/nevada/) for network-valued data, [{fdatest}](https://github.com/astamm/fdatest) for functional data, and unpublished extensions for scalar- and vector-valued data. The new package will extend methods for two-sample testing, ANOVA, hypothesis testing, and confidence estimation to data types arising from TDA. It will inherit non-parametric combination [@pesarin2010permutation], which enables the use of several test statistics in a single hypothesis test, making the combination sensitive to different aspects of the compared underlying distributions.
+
+#### Aim 3
+
+::: {.callout-tip icon="false" title="Ripser for the R community"}
+Refactor [{ripserr}](https://tdaverse.github.io/ripserr/) with a current implementation of [ripser](http://ripser.org/) and connect additional options to R.
+:::
+
+The base implementation of [ripser](http://ripser.org/) is written in C++, and [{ripserr}](https://tdaverse.github.io/ripserr/) provides integration via [{Rcpp}](https://www.rcpp.org). We therefore anticipate that this update will be a straightforward, though not trivial, exercise in C++/R integration. In particular, it will provide options to retrieve representative cycles and cocycles for topological features, which are essential for many practical applications.
+
+## Progress report
+
+### Specific Aim 1
+
+### Specific Aim 2
+
+#### Plan
+
+Main people
+
+- Manon Simonot, Statistical Engineer, CNRS;
+- Aymeric Stamm, Research Engineer, CNRS (co-PI and lead on SA2).
+
+Management
+
+- Prepare report for R consortium;
+- Set up a list of tasks to be achieved;
+- Distribute tasks between Manon and myself.
+
+Permutation schemes via [{flipr}](https://lmjl-alea.github.io/flipr/)
+
+- Add missing features in [{flipr}](https://lmjl-alea.github.io/flipr/): ANOVA, Friedman Lane permutation scheme for regression;
+- Put more thinking into confidence regions (computational cost in particular);
+- Adapt code following deprecations in dials ([#13](https://github.com/LMJL-Alea/flipr/issues/13));
+- Use viridis only as suggested package ([#12](https://github.com/LMJL-Alea/flipr/issues/12));
+- Use parallel + cli package for computation instead of pbapply ([#11](https://github.com/LMJL-Alea/flipr/issues/11));
+- Distinguish M small cases ([#10](https://github.com/LMJL-Alea/flipr/issues/10));
+- Allow alternative to be chosen for each stat ([#8](https://github.com/LMJL-Alea/flipr/issues/8));
+- Investigate whether permuted stats should have unique values only ([#7](https://github.com/LMJL-Alea/flipr/issues/7));
+- Add vignette about how to use inter-point test statistics ([#6](https://github.com/LMJL-Alea/flipr/issues/6));
+- Create a vignette to further investigate the differences between p-value formulae ([#5](https://github.com/LMJL-Alea/flipr/issues/5));
+- Add a vignette to explain how to compute the number of possible distinct values of the test statistic ([#4](https://github.com/LMJL-Alea/flipr/issues/4));
+- Improve documentation;
+- Improve test coverage.
+
+TDA
+
+- test and report packages developed as part of the other specific aims ([{tdarec}](https://github.com/corybrunson/tdarec), [{plt}](https://corybrunson.github.io/plt/), etc.);
+- write, document and publish a lightweight package for a tdaverse-opinionated data structure that stores a persistent diagram;
+- update {fdatest} package to be [{flipr}](https://lmjl-alea.github.io/flipr/)-based since most TDA vectorizations can be seen as functional data;
+- dig into {infer} package for tidymodels compatibility;
+- design, write, document and publish a package for inference for topological data.
+
+#### Achievements
+
+
+
+### Specific Aim 3
+
+## Issues
+
+- [{ripserr}](https://tdaverse.github.io/ripserr/) repo and CRAN pages do not reference the correct website URL following migration to the [tdaverse](https://github.com/tdaverse) organization.
+
+### News in the recent literature
+
+I discovered last week that some relatively new TDA researchers and software developers had published a package that accomplishes part of the first aim of our proposal. In this email i'll describe their contribution and  propose a modification to our first aim.
+ 
+The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package
+ 
+The package [{TDAvec}](https://cran.r-project.org/package=TDAvec) provides efficient {Rcpp}-enabled implementations of several vectorizations of persistence data, including Betti curves (called functions), persistence landscapes, and persistence images (called surfaces). It exports an R function for each vectorization method using consistent conventions. It is not designed to interface with other TDA packages except {TDA} and could not be conveniently built in to a Tidymodels workflow.
+ 
+The package was originally published on CRAN in 2022 [1], with {TDA} as a dependency; it was presumably temporarily archived during the same intervals as {TDA}. (I discovered it while reviewing {TDA} dependencies.) The GitHub repository was only just made public [2]. Its author Dr. Islambekov, together with Drs. Luchinsky and Pathirana among others, recently published two articles and completed one thesis on contributions to the package and studies to which it was applied [3,4,5].
+ 
+Proposed modification to Aim 1
+ 
+Before finding [{TDAvec}](https://cran.r-project.org/package=TDAvec), we had already planned to build two packages for Aim 1: [{TDAvec}](https://cran.r-project.org/package=TDAvec), which would implement vectorizations, and [{tdarec}](https://github.com/corybrunson/tdarec), an extension to {recipes} that would integrate them into Tidymodels. We propose therefore
+(1a) to contribute additional vectorization methods to [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described in the original proposal and (1b) to write [{tdarec}](https://github.com/corybrunson/tdarec) with [{TDAvec}](https://cran.r-project.org/package=TDAvec) its primary dependency (other than {recipes}).
+ 
+I have contacted Drs. Islambekov, Luchinsky, and Pathirana with this idea, and they are open to our collaboration with them on [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described, along with some other goals for the package. Because they have already built an efficient standard and several vectorizations, we expect the final product to be more comprehensive and mature than it otherwise would have been.
+ 
+I apologize for the omission from our original proposal and would be glad to answer further questions or take other requested steps.
+ 
+Cory Brunson
+ 
+[1] https://cran.r-project.org/package=TDAvec
+[2] https://github.com/uislambekov/TDAvec
+[3] https://www.jmlr.org/papers/v23/21-1129.html
+[4] https://etd.ohiolink.edu/acprod/odb_etd/etd/r/1501/10?clear=10&p10_accession_num=bgsu1680226819017686
+[5] https://www.aimsciences.org/article/doi/10.3934/fods.2024002
