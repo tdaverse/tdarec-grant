@@ -52,23 +52,15 @@ The base implementation of [ripser](http://ripser.org/) is written in C++, and [
 
 ### Specific Aim 2
 
-#### Plan
+#### Logistics
 
 Main people
 
-- Manon Simonot, Statistical Engineer, CNRS;
-- Aymeric Stamm, Research Engineer, CNRS (co-PI and lead on SA2).
+- Manon Simonot (MSI), Statistical Engineer, CNRS;
+- Aymeric Stamm (AST), Research Engineer, CNRS (co-PI and lead on SA2).
 
-Management
+MSI will contribute key features that are partial or missing in [{flipr}](https://lmjl-alea.github.io/flipr/) to handle permutation schemes in a manner that is agnostic to the type of input data. In particular, she will work on the currently listed issues:
 
-- Prepare report for R consortium;
-- Set up a list of tasks to be achieved;
-- Distribute tasks between Manon and myself.
-
-Permutation schemes via [{flipr}](https://lmjl-alea.github.io/flipr/)
-
-- Add missing features in [{flipr}](https://lmjl-alea.github.io/flipr/): ANOVA, Friedman Lane permutation scheme for regression;
-- Put more thinking into confidence regions (computational cost in particular);
 - Adapt code following deprecations in dials ([#13](https://github.com/LMJL-Alea/flipr/issues/13));
 - Use viridis only as suggested package ([#12](https://github.com/LMJL-Alea/flipr/issues/12));
 - Use parallel + cli package for computation instead of pbapply ([#11](https://github.com/LMJL-Alea/flipr/issues/11));
@@ -77,21 +69,69 @@ Permutation schemes via [{flipr}](https://lmjl-alea.github.io/flipr/)
 - Investigate whether permuted stats should have unique values only ([#7](https://github.com/LMJL-Alea/flipr/issues/7));
 - Add vignette about how to use inter-point test statistics ([#6](https://github.com/LMJL-Alea/flipr/issues/6));
 - Create a vignette to further investigate the differences between p-value formulae ([#5](https://github.com/LMJL-Alea/flipr/issues/5));
-- Add a vignette to explain how to compute the number of possible distinct values of the test statistic ([#4](https://github.com/LMJL-Alea/flipr/issues/4));
+- Add a vignette to explain how to compute the number of possible distinct values of the test statistic ([#4](https://github.com/LMJL-Alea/flipr/issues/4)).
+
+In addition, she will contribute the following points:
+
+- Add missing features in [{flipr}](https://lmjl-alea.github.io/flipr/): ANOVA, Friedman Lane permutation scheme for regression;
+- Put more thinking into confidence regions (computational cost in particular);
 - Improve documentation;
 - Improve test coverage.
 
-TDA
+AST will supervise the work of MSI and focus on the development of two new packages for enable inference for topological data, namely {tdadiagram} and {tdainfer}. In detail, AST will contribute the following points:
 
 - test and report packages developed as part of the other specific aims ([{tdarec}](https://github.com/corybrunson/tdarec), [{plt}](https://corybrunson.github.io/plt/), etc.);
-- write, document and publish a lightweight package for a tdaverse-opinionated data structure that stores a persistent diagram;
-- update {fdatest} package to be [{flipr}](https://lmjl-alea.github.io/flipr/)-based since most TDA vectorizations can be seen as functional data;
-- dig into {infer} package for tidymodels compatibility;
-- design, write, document and publish a package for inference for topological data.
+- write, document and publish a lightweight package for a [tdaverse](https://github.com/tdaverse)-opinionated data structure that stores a persistent diagram;
+- update [{fdatest}](https://github.com/astamm/fdatest) package to be [{flipr}](https://lmjl-alea.github.io/flipr/)-based since most TDA vectorizations can be seen as functional data;
+- dig into [{infer}](https://infer.tidymodels.org) package for [tidymodels](https://www.tidymodels.org) compatibility;
+- design, write, document and publish {tdainfer} to make inference for topological data.
 
-#### Achievements
+#### Dependencies between packages
 
+![](images/tdainfer-deps.png)
 
+#### {tdadiagram}
+
+The scope of the package is to implement a lightweight data structure to host a persistence diagram. There is an [issue](https://github.com/tdaverse/tdaverse/issues/4) on the {tdaverse} repository to brainstorm for the best representation.
+
+There are currently three points of reference that we know of:
+
+- the `diagram` class in [{TDA}](https://cran.r-project.org/package=TDA), to which belongs the `diagram` element of the list output of, e.g., `ripsDiag`; it is a 3-column matrix with attributes for the maximum dimension and the maximum scale (radius);
+- the `PHom` class in [{ripserr}](https://tdaverse.github.io/ripserr/), which is a light wrapper around a 3-column data frame;
+- the `persistence` class in [{plt}](https://corybrunson.github.io/plt/), which is structured as a list whose first element is a list of 2-column matrices and whose other elements are the prime field of coefficients, the maximum dimension, and the maximum scale.
+
+There seems to be two main natural data structures:
+
+- a list of matrices, one for each homology dimension; or,
+- a data frame or tibble.
+
+One concern is how suitable these are to host extended persistence.
+
+In any case, we should in addition store information about how the diagram was computed (which filtration, which engine to perform computations, and so on).
+
+Also, we will have to implement common generics along with the class itself, such as `format()`, etc.
+
+#### Inference in the space of persistence diagrams
+
+Using both {tdadiagram} which will provide a class for a single persistence diagram and [{flipr}](https://lmjl-alea.github.io/flipr/) which provides the permutation mechanisms, {tdainfer} will provide:
+
+- a class for a sample of persistence diagrams;
+- dedicated test statistics based on distances between diagrams (either Bottleneck or Wasserstein distances);
+- hypothesis testing in the space of diagrams from these test statistics.
+
+Confidence regions is an open question here, both because it will be computationally expensive and because it raises the questions of how to visualize it.
+
+#### Inference for vectorizations of persistence diagrams
+
+As mentioned in the grant application, a number of vectorizations of persistence diagrams have been devised in the literature, most of which have been implemented in a consistent API as part of the [{TDAvec}](https://cran.r-project.org/package=TDAvec) and [{plt}](https://corybrunson.github.io/plt/) packages.
+
+Vectorization effectively pushes diagrams into a functional space for which we could update and use the [{fdatest}](https://github.com/astamm/fdatest) package dedicated to hypothesis testing for functional data using permutations.
+
+#### Seamless integration within [tidymodels](https://www.tidymodels.org)
+
+The [tidymodels](https://www.tidymodels.org) ecosystem of packages has the [{infer}](https://infer.tidymodels.org/) package which is dedicated to performing statistical inference using an expressive statistical grammar that coheres with the tidyverse design framework.
+
+We need to investigate further whether we can only take inspiration from its API or we can make it work together with {tdainfer}.
 
 ### Specific Aim 3
 
