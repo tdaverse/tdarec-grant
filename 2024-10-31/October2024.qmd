@@ -1,8 +1,8 @@
 ---
 title: "Integrating topological data analytic tools into the tidy data analysis and machine learning ecosystems"
-subtitle: "R Consortium 2024 ISC Grant"
+subtitle: "Progress Report"
 author: Aymeric Stamm
-date: today
+date: 2024-10-31
 format: html
 toc: true
 bibliography: references.bib
