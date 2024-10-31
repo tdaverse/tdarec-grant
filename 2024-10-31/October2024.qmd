@@ -21,9 +21,9 @@ Our **goal** with this project is to seamlessly integrate popular techniques fro
 
 ### Overview
 
-The [Tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a [Tidymodels](https://www.tidymodels.org/)-compatible R package.
+The [tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a [tidymodels](https://www.tidymodels.org/)-compatible R package.
 
-TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a [Tidymodels](https://www.tidymodels.org/)-compatible package for permutation-based hypothesis testing with topological data.
+TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a [tidymodels](https://www.tidymodels.org/)-compatible package for permutation-based hypothesis testing with topological data.
 
 The primary workhorse for TDA is [Ripser](http://ripser.org/), which efficiently computes Vietoris–Rips filtrations. The engine used in the lightweight wrapper package [{ripserr}](https://tdaverse.github.io/ripserr/) is missing key features, so our **third aim** is to upgrade it.
 
@@ -140,26 +140,26 @@ MSI will contribute key features that are partial or missing in [{flipr}](https:
 
 In addition, she will contribute the following points:
 
-- Add missing features in [{flipr}](https://lmjl-alea.github.io/flipr/): ANOVA, Friedman Lane permutation scheme for regression;
+- Add missing features in [{flipr}](https://lmjl-alea.github.io/flipr/): ANOVA, Friedman-Lane and other permutation schemes for regression, etc.;
 - Put more thinking into confidence regions (computational cost in particular);
 - Improve documentation;
 - Improve test coverage.
 
-AST will supervise the work of MSI and focus on the development of two new packages for enable inference for topological data, namely {tdadiagram} and {tdainfer}. In detail, AST will contribute the following points:
+AST will supervise the work of MSI and focus on the development of two new packages for enable inference for topological data, namely {phutil} and {inphr}. In detail, AST will contribute the following points:
 
 - test and report packages developed as part of the other specific aims ([{tdarec}](https://github.com/corybrunson/tdarec), [{plt}](https://corybrunson.github.io/plt/), etc.);
-- write, document and publish a lightweight package for a [tdaverse](https://github.com/tdaverse)-opinionated data structure that stores a persistent diagram;
+- write, document, test and publish a lightweight package {phutil} (stands for **P**ersistence **H**omology **UTIL**ities and should be pronounced *futile*), for a [tdaverse](https://github.com/tdaverse)-opinionated data structure that stores PH data and a number of utility functions to be used by reverse dependencies;
 - update [{fdatest}](https://github.com/astamm/fdatest) package to be [{flipr}](https://lmjl-alea.github.io/flipr/)-based since most TDA vectorizations can be seen as functional data;
 - dig into [{infer}](https://infer.tidymodels.org) package for [tidymodels](https://www.tidymodels.org) compatibility;
-- design, write, document and publish {tdainfer} to make inference for topological data.
+- design, write, document, test and publish {inphr} (stands for **IN**ference for **P**ersistence **H**omology in **R** and should be pronounced *infer*) to make inference for topological data.
 
 #### Dependencies between packages
 
 ![](images/tdainfer-deps.png)
 
-#### {tdadiagram}
+#### {phutil}
 
-The scope of the package is to implement a lightweight data structure to host a persistence diagram. There is an [issue](https://github.com/tdaverse/tdaverse/issues/4) on the [{tdaverse}](https://github.com/tdaverse/tdaverse) repository to brainstorm for the best representation.
+The scope of the package is to implement a lightweight data structure to host a persistence diagram and a number of utility functions to be used by reverse dependencies. There is an [issue](https://github.com/tdaverse/tdaverse/issues/4) on the [{tdaverse}](https://github.com/tdaverse/tdaverse) repository to brainstorm for the best representation.
 
 There are currently three points of reference that we know of:
 
@@ -180,7 +180,7 @@ Also, we will have to implement common generics along with the class itself, suc
 
 #### Inference in the space of persistence diagrams
 
-Using both {tdadiagram} which will provide a class for a single persistence diagram and [{flipr}](https://lmjl-alea.github.io/flipr/) which provides the permutation mechanisms, {tdainfer} will provide:
+Using both {phutil} which will provide a class for a single persistence diagram and [{flipr}](https://lmjl-alea.github.io/flipr/) which provides the permutation mechanisms, {inphr} will provide:
 
 - a class for a sample of persistence diagrams;
 - dedicated test statistics based on distances between diagrams (either Bottleneck or Wasserstein distances);
@@ -198,7 +198,7 @@ Vectorization effectively pushes diagrams into a functional space for which we c
 
 The [tidymodels](https://www.tidymodels.org) ecosystem of packages has the [{infer}](https://infer.tidymodels.org/) package which is dedicated to performing statistical inference using an expressive statistical grammar that coheres with the [tidyverse](https://www.tidyverse.org) design framework.
 
-We need to investigate further whether we can only take inspiration from its API or we can make it work together with {tdainfer}.
+We need to investigate further whether we can only take inspiration from its API or we can make it work together with {inphr}.
 
 ### Specific Aim 3
 
