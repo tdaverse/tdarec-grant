@@ -72,15 +72,19 @@ Collaborators:
 Shortly before the funding period, while reviewing [{TDA}](https://cran.r-project.org/package=TDA) dependencies, JBR discovered a published R package[^discovery] by other TDA researchers and software developers that accomplishes much of Aim 1.
 
 [^discovery]: The package was originally published on CRAN in 2022 (<https://cran.r-project.org/package=TDAvec>), with {TDA} as a dependency; we assume it to have been temporarily archived during the same intervals as {TDA}. The GitHub repository was only recently made public (<https://github.com/uislambekov/TDAvec>).
-Its author Dr. Islambekov, together with Dr. Luchinsky and others, describe the proposed persistence block vectorization and its methodological potential in recent manuscripts [@chan2022computationally; @islambekov2023vector].
+Its author UIS, together with ALU and others, describe the proposed persistence block vectorization and its methodological potential in recent manuscripts [@chan2022computationally; @islambekov2023vector].
 JBR has met with UIS and ALU to discuss the goals of this proposal, and they are interested and prepared to coordinate the further development of their package with these goals.
 
 ::: {.callout-tip icon="false" title="The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package"}
 The {TDAvec} package provides efficient {Rcpp}-enabled implementations of eight vectorizations of persistence data: Betti curves (called functions), persistence landscapes and the related persistence silhouettes, the persistent entropy summary function, the Euler characteristic curve, the normalized life curve, and persistence images (called surfaces) and the authors' related proposal of persistence blocks. The package exports an `R` function for each vectorization method using consistent conventions for function names and arguments.
 :::
 
-The {TDAvec} package is not designed to interface with other TDA packages except {TDA} and could not be conveniently built in to a Tidymodels workflow.
- 
+The {TDAvec} package is optimized for memory and speed.
+Indeed, benchmark tests show that the calculation of persistence landscapes using {TDAvec}, for example, is 3 orders of magnitude faster than using {TDA} and one order of magnitude faster than using {plt}.
+This is achieved in several ways: All vectorizations are written in C++ and exposed to R via {Rcpp}; suitable vectorizations are discretized via integration over grid intervals rather than evaluation at grid points to achieve higher resolution with negligible cost; and no additional classes, methods, or analysis functions are provided.
+Consequently, {TDAvec} is not designed to interface with other TDA packages than the popular {TDA} (for computing PH) and could not be easily built in to a Tidymodels workflow.
+Therefore, the amended Aim 1 is not only to support further development of {TDAvec} but also to build a {recipes} extension that calls upon {TDAvec} as an engine.
+
 ::: {.callout-tip icon="false" title="Proposed modification to Aim 1"}
 We propose to amend Aim 1 as follows:
 
@@ -89,7 +93,7 @@ We propose to amend Aim 1 as follows:
 :::
 
 Because UIS has provided an efficient and flexible standard for PH vectorizations, we expect the final products to be more comprehensive and mature than they otherwise would have been.
-Because we have not yet made detailed plans for {TDAvec} with its authors, the remainder of this section will discuss only {tdarec}.
+Because we have not yet discussed detailed plans for {TDAvec} with the authors, the remainder of this section will discuss only {tdarec}.
 
 #### Prototype {recipes} extension
 
@@ -115,8 +119,8 @@ Tidyverse core developers will be asked via online fora or repo issues for insig
 
 #### Dependencies
 
-The {recipes} extension {tdarec} will `Suggest` {ripserr} as an engine for computing PH of point clouds (`step_phom_point_cloud()`) and of images (`step_phom_image()`).
-While it will be the only engine for the latter, other engines will be available for the former, including those of {TDA}, which will also be `Suggest`ed.
+The {recipes} extension {tdarec} will `Suggest` {ripserr} to compute PH of point clouds (`step_phom_point_cloud()`) and of images (`step_phom_image()`).
+While it will be the only option for the latter, other engines will be available for the former, including those of {TDA}, which will also be `Suggest`ed.
 
 Because engine deployment for computing PH is required by at least two [TDAverse](https://github.com/tdaverse/) packages ([{ggtda}](https://tdaverse.github.io/ggtda/) and {tdarec}), deployment functions may be included in the helper package {phutil} described in the section on Aim 2.
 
@@ -170,7 +174,7 @@ For storing persistence data (diagrams), there is an issue ([#4](https://github.
 - the `PHom` class in {ripserr}, which is a light wrapper around a 3-column data frame;
 - the `persistence` class in {plt}, which is structured as a list whose first element is a list of 2-column matrices and whose other elements are the prime field of coefficients, the maximum dimension, and the maximum scale.
 
-The final data structure must be able to store extended persistent homology [@cohensteiner2009extending], in which each feature falls into one of three bins: ordinary, relative, and extended. While ordinary and relative features are distinguished by whether each feature's birth value is smaller (ordinary) or larger (relative) than its death value, extended features may satisfy either inequality and must be distinguished.
+The final data structure must be able to store extended persistent homology [@cohensteiner2009extending], in which each feature belongs to one of three types: ordinary, relative, and extended. While ordinary and relative features are distinguished by whether each feature's birth value is smaller (ordinary) or larger (relative) than its death value, extended features may satisfy either inequality and must be distinguished from the ordinary and relative.
 
 Discussions with the TDA seminar and other colleagues will inform the final choice of data structure.
 The leading candidate is a list of 2-element lists of 2-column matrices, in which the outer list indicates the homological degree (starting with 0), each inner list distinguishes ordinary/relative (first matrix) and extended (second matrix) features, and each matrix contains birth--death value pairs.
