@@ -1,24 +1,28 @@
 ---
 title: "Integrating topological data analytic tools into the tidy data analysis and machine learning ecosystems"
 subtitle: "Progress Report"
-author: Aymeric Stamm
+author: Aymeric Stamm and Jason Cory Brunson
 date: 2024-10-31
-format: html
+format: pdf
 toc: true
 bibliography: references.bib
 ---
 
+## Overview
+
+This document will recap the specific aims of our proposal, then provide a detailed update on each aim in turn.
+
 ## Proposal
 
-Our **goal** is to seamlessly integrate popular techniques from topological data analysis (TDA) into common statistical workflows in R. The **expected benefit** is that these extensions will be more widely used by non-specialist researchers and analysts, which will create sufficient awareness and interest in the community to extend the individual packages and the collection.
+Our **goal** with this project is to seamlessly integrate popular techniques from topological data analysis (TDA) into common statistical workflows in R. The **expected benefit** is that these extensions will be more widely used by non-specialist researchers and analysts, which will create sufficient awareness and interest in the community to extend the individual packages and the collection.
 
 ### Overview
 
-The [tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a [tidymodels](https://www.tidymodels.org/)-compatible R package.
+The [Tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a [Tidymodels](https://www.tidymodels.org/)-compatible R package.
 
-TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a [tidymodels](https://www.tidymodels.org/)-compatible package for permutation-based hypothesis testing with topological data.
+TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a [Tidymodels](https://www.tidymodels.org/)-compatible package for permutation-based hypothesis testing with topological data.
 
-The primary workhorse for TDA is [ripser](http://ripser.org/), which efficiently computes Vietoris–Rips filtrations. The engine used in the lightweight wrapper package [{ripserr}](https://tdaverse.github.io/ripserr/) is missing key features, so our **third aim** is to upgrade it.
+The primary workhorse for TDA is [Ripser](http://ripser.org/), which efficiently computes Vietoris–Rips filtrations. The engine used in the lightweight wrapper package [{ripserr}](https://tdaverse.github.io/ripserr/) is missing key features, so our **third aim** is to upgrade it.
 
 ### Specific Aims
 
@@ -28,7 +32,7 @@ The primary workhorse for TDA is [ripser](http://ripser.org/), which efficiently
 Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
 :::
 
-The new package would provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable [{recipes}](https://recipes.tidymodels.org) extension for association rules^[https://github.com/corybrunson/arulesteps].
+The new package will provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable [{recipes}](https://recipes.tidymodels.org) extension for association rules^[https://github.com/corybrunson/arulesteps].
 
 #### Aim 2
 
@@ -44,11 +48,70 @@ Dr. Stamm leads a coordinated package collection for permutation-based inference
 Refactor [{ripserr}](https://tdaverse.github.io/ripserr/) with a current implementation of [ripser](http://ripser.org/) and connect additional options to R.
 :::
 
-The base implementation of [ripser](http://ripser.org/) is written in C++, and [{ripserr}](https://tdaverse.github.io/ripserr/) provides integration via [{Rcpp}](https://www.rcpp.org). We therefore anticipate that this update will be a straightforward, though not trivial, exercise in C++/R integration. In particular, it will provide options to retrieve representative cycles and cocycles for topological features, which are essential for many practical applications.
+The base implementation of [Ripser](http://ripser.org/) is written in C++, and [{ripserr}](https://tdaverse.github.io/ripserr/) provides integration via [{Rcpp}](https://www.rcpp.org). We therefore anticipate that this update will be a straightforward, though not trivial, exercise in C++/R integration. In particular, it will provide options to retrieve representative cycles and cocycles for topological features, which are essential for many practical applications.
 
 ## Progress report
 
 ### Specific Aim 1
+
+#### Logistics
+
+Key personnel:
+
+* Jason Cory Brunson (JBR), Mathematician, UF
+
+Collaborators:
+
+* Umar Islambekov (UIS), Data Scientist, BGSU
+* Aleksei Luchinsky (ALU), Data Scientist, BGSU
+
+#### Modification
+
+Shortly before the funding period, while reviewing [{TDA}](https://cran.r-project.org/package=TDA) dependencies, JBR discovered a published R package[^discovery] by other TDA researchers and software developers that accomplishes much of Aim 1.
+
+::: {.callout-tip icon="false" title="The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package"}
+The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package provides efficient [{Rcpp}](https://www.rcpp.org)-enabled implementations of eight vectorizations of persistence data: Betti curves (called functions), persistence landscapes and the related persistence silhouettes, the persistent entropy summary function, the Euler characteristic curve, the normalized life curve, and persistence images (called surfaces) and the authors' related proposal of persistence blocks. The package exports an `R` function for each vectorization method using consistent conventions for function names and arguments.
+:::
+
+{TDAvec} is not designed to interface with other TDA packages except [{TDA}](https://cran.r-project.org/package=TDA) and could not be conveniently built in to a [tidymodels](https://www.tidymodels.org) workflow.
+
+[^discovery]: The package was originally published on CRAN in 2022 (<https://cran.r-project.org/package=TDAvec>), with {TDA} as a dependency; we assume it to have been temporarily archived during the same intervals as {TDA}. The GitHub repository was only recently made public (<https://github.com/uislambekov/TDAvec>).
+Its author Dr. Islambekov, together with Dr. Luchinsky and others, describe the proposed persistence block vectorization and its methodological potential in recent journal articles [@chan2022computationally; @islambekov2023vector].
+JBR has met with UIS and ALU to discuss the goals of this proposal, and they are interested and prepared to coordinate the further development of their package with these goals.
+ 
+::: {.callout-tip icon="false" title="Proposed modification to Aim 1"}
+We propose to amend Aim 1 as follows:
+_Aim 1.1_: Contribute additional vectorization methods, including one named in the original proposal but not yet implemented (persistence statistics), to [{TDAvec}](https://cran.r-project.org/package=TDAvec).
+_Aim 1.2_: Develop and publish the [{recipes}](https://recipes.tidymodels.org) extension [{tdarec}](https://github.com/corybrunson/tdarec) with {TDAvec} its primary dependency for vectorizations of persistent homology (PH).
+:::
+
+Because UIS has provided an efficient and flexible standard for PH vectorizations, we expect the final products to be more comprehensive and mature than they otherwise would have been.
+Because we have not yet made detailed plans for {TDAvec} with its authors, the remainder of this section will discuss only {tdarec}.
+
+#### Prototype {recipes} extension
+
+A prototype of [{tdarec}](https://github.com/corybrunson/tdarec) is public on GitHub with the following documented and exemplified (not yet unit-tested) functionality:
+
+* two families of pre-processing steps:
+    1. computation of PH (outputed as list-columns of 3-column matrices) on point clouds (inputed as list-columns of objects passable to `ripserr::vietoris_rips()`)
+    2. vectorization (outputed as $n$ `double` columns for vectorizations to $\mathbb{R}^n$) of persistence data / diagrams (inputed as list-columns of 3-column matrices)
+* tunability for the `max_hom_degree` and `hom_degree` hyperparameters in the respective steps
+* runnable examples of both steps, in separate recipes and in sequence within a single recipe, with and without tuning
+
+Currently only one instance of each family of steps is implemented: `step_phom_point_cloud()` for PH and `step_vpd_ecc()` for Euler characteristic curves.
+The PH steps will be scoped according to the mathematical objects for which they compute PH, whatever data structure is used to encode these objects ([#2](https://github.com/corybrunson/tdarec/issues/2)): point clouds (coordinate matrices, distance matrices), images (arrays), time series, etc.
+This is expected to work well with the use of S3 classes to pass different data structures to the same object-appropriate engine, e.g. `ripserr:::vietoris_rips.matrix()` and `ripserr:::vietoris_rips.dist()`.
+
+Because {TDAvec} uses rigorous naming and parameterizing standards, we plan to write a helper script to generate the source code of one vectorization step for each function `TDAvec::compute*()`, tailored to that function's arguments and derived in part from {TDAvec} documentation ([#3](https://github.com/corybrunson/tdarec/issues/3)).
+This will allow to rapidly update {tdarec} as new vectorizations are implemented in {TDAvec}, both during development and between releases.
+JBR has taken this approach to generating source code for a similar derivative family of functions in the [{ordr}](https://github.com/corybrunson/ordr) package (<https://github.com/corybrunson/ordr/blob/main/build-pre/build-layers.r>).
+
+#### Dependencies
+
+The {recipes} extension {tdarec} will `Suggest` {ripserr} as an engine for computing PH of point clouds (`step_phom_point_cloud()`) and of images (`step_phom_image()`).
+While it will be the only engine for the latter, other engines will be available for the former, including those of {TDA}, which will also be `Suggest`ed.
+
+Because engine deployment for computing PH is required by at least two TDAverse packages ({ggtda} and {tdarec}), deployment functions may be included in the helper package described in the section on Aim 2.
 
 ### Specific Aim 2
 
@@ -135,23 +198,37 @@ We need to investigate further whether we can only take inspiration from its API
 
 ### Specific Aim 3
 
+#### Logistics and Plan
+
+Key Personnel:
+
+* Jason Cory Brunson (JBR), Mathematician, LSM
+* Kent Phipps (KPH), undergraduate student, CISE
+* Sean Hershkowitz (SHE), undergraduate student, CISE
+* Alice Zhang (AZH), undergraduate student, CISE (pre-med)
+
+In order to most faithfully and efficiently join the current release of Ripser (`main` branch) with features implemented in development branches, three computer and information science and engineering (CISE) students will build proficiency in the essential algorithms of PH and the Ripser code base under JBR's supervision, then collaborate with JBR to upgrade the {ripserr} package, probably by rebuilding from scratch with the existing version as a guide.[^interviews]
+
+[^interviews]: JBR interviewed more than 20 students who expressed interest in the project in response to an announcement distributed by the Center for Undergraduate Research at the University of Florida. The key personnel were selected based on their familiarity with algorithm design and strong backgrounds in C++.
+
+KPH, SHE, and AZH meet each Tuesday for a Student Team Meeting and Thursday with JBR for an All-Hands Meeting, and they began payroll on October 17.
+We have charted a plan for a 3-month pay period to complete the upgrade, documentation, and re-release of {ripserr}, with the following monthly products of work:
+
+1. Installable upgrade of {ripserr} using the current Ripser code base
+2. Incorporation of subroutines to return representative cycles and representative cocycles with an illustrative vignette
+3. Resubmission to CRAN and draft software journal article
+
+Should the students complete these products early or decide to continue with the project after the pay period, the following stretch goals will be pursued:
+
+* Harmonization of cubical with Vietoris--Rips conventions
+* Incorporation of representative (co)cycle subroutines into cubical implementation
+
+#### Reverse dependencies
+
+As detailed under Specific Aim 1, {ripserr} will be `Suggest`ed by {tdarec} as well as other packages like {ggtda}.
+Upgrades will undergo reverse dependency checks to ensure that syntatic and output changes do not produce errors with legacy code.
+
 ## Issues
-
-### Modification to SA1
-
-JBR discovered that some relatively new TDA researchers and software developers had published a package that accomplishes part of the first aim of our proposal.
-
-::: {.callout-tip icon="false" title="The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package"}
-The [{TDAvec}](https://cran.r-project.org/package=TDAvec) package provides efficient [{Rcpp}](https://www.rcpp.org)-enabled implementations of several vectorizations of persistence data, including Betti curves (called functions), persistence landscapes, and persistence images (called surfaces). It exports an `R` function for each vectorization method using consistent conventions. It is not designed to interface with other TDA packages except [{TDA}](https://cran.r-project.org/package=TDA) and could not be conveniently built in to a [tidymodels](https://www.tidymodels.org) workflow.
-:::
- 
-The package was originally published on CRAN in 2022^[https://cran.r-project.org/package=TDAvec], with [{TDA}](https://cran.r-project.org/package=TDA) as a dependency; it was presumably temporarily archived during the same intervals as [{TDA}](https://cran.r-project.org/package=TDA). JBR discovered it while reviewing [{TDA}](https://cran.r-project.org/package=TDA) dependencies. The GitHub repository was only just made public^[https://github.com/uislambekov/TDAvec]. Its author Dr. Islambekov, together with Drs. Luchinsky and Pathirana among others, recently published two articles and completed one thesis on contributions to the package and studies to which it was applied [@chan2022computationally;@islambekov2023vector;@pathirana2023efficient].
- 
-::: {.callout-tip icon="false" title="Proposed modification to Aim 1"}
-Before finding [{TDAvec}](https://cran.r-project.org/package=TDAvec), we had already planned to build two packages for Aim 1: [{TDAvec}](https://cran.r-project.org/package=TDAvec), which would implement vectorizations, and [{tdarec}](https://github.com/corybrunson/tdarec), an extension to [{recipes}](https://recipes.tidymodels.org) that would integrate them into [tidymodels](https://www.tidymodels.org). We propose therefore (1a) to contribute additional vectorization methods to [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described in the original proposal and (1b) to write [{tdarec}](https://github.com/corybrunson/tdarec) with [{TDAvec}](https://cran.r-project.org/package=TDAvec) its primary dependency (other than [{recipes}](https://recipes.tidymodels.org)).
-:::
- 
-JBR has contacted Drs. Islambekov, Luchinsky, and Pathirana with this idea, and they are open to our collaboration with them on [{TDAvec}](https://cran.r-project.org/package=TDAvec) as described, along with some other goals for the package. Because they have already built an efficient standard and several vectorizations, we expect the final product to be more comprehensive and mature than it otherwise would have been.
 
 ### Minor things to be fixed
 
