@@ -1,0 +1,186 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "November Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+    corresponding: true
+    orcid: 0000-0002-8725-3654
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2024 November 30
+format:
+    typst: default
+toc: true
+number-sections: true
+bibliography: references.bib
+---
+
+## Proposal
+
+This section will restate the specific aims of our proposal.
+The next will provide a detailed update on each aim in turn.
+
+Our **goal** with this project is to seamlessly integrate popular techniques from topological data analysis (TDA) into common statistical workflows in R. The **expected benefit** is that these extensions will be more widely used by non-specialist researchers and analysts, which will create sufficient awareness and interest in the community to extend the individual packages and the collection.
+
+### Overview
+
+The [Tidymodels](https://www.tidymodels.org/) ecosystem [@kuhn2022tidy] provides a complete toolkit for common machine learning (ML) tasks. ML relies heavily on vectorizations, and the last decade of work in TDA has produced several for topological data. Our **first aim** is to make these available in a Tidymodels-compatible R package.
+
+TDA relies heavily on statistical inference. A variety of hypothesis tests have been proposed in the research literature and have idiosyncratic implementations. Our **second aim** is to provide a Tidymodels-compatible package for permutation-based hypothesis testing with topological data.
+
+The primary workhorse for TDA is [Ripser](http://ripser.org/), which efficiently computes Vietoris–Rips filtrations. The engine used in the lightweight wrapper package [{ripserr}](https://cran.r-project.org/package=ripserr) is missing key features, so our **third aim** is to upgrade it.
+
+### Specific Aims
+
+#### Aim 1
+
+::: {.callout-tip icon="false" title="Recipes for TDA"}
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+:::
+
+The new package will provide `step_*()` functions for several topological transformations and document the process for contributing additional steps. From among many proposed transformations [@fasy2020comparing;@pun2022persistent;@ali2023survey], we intend to include the following in a first release based on their relative simplicity, time on CRAN, frequency of use, and expected implementation cost: persistence statistics, Betti curve, lifespan curve (to be implemented anew), persistence landscape (to rely on the forthcoming [{plt}](https://corybrunson.github.io/plt/)), and persistent image (to be adapted from the original Matlab implementation^[https://github.com/CSU-TDA/PersistenceImages]). Dr. Brunson has experience writing an unpublished but installable {recipes} extension for association rules^[https://github.com/corybrunson/arulesteps].
+
+#### Aim 2
+
+::: {.callout-tip icon="false" title="Inference for TDA"}
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+:::
+
+Dr. Stamm leads a coordinated package collection for permutation-based inference, with the published {flipr} package at its center. This package features (i) implementations of classic permutation schemes that are agnostic to the type of input and (ii) the central [`PlausibilityFunction`](https://lmjl-alea.github.io/flipr/reference/PlausibilityFunction.html) [{R6}](https://r6.r-lib.org) class for seamless hypothesis testing and confidence estimation. Several extensions are published or in development for specific data types, including [{nevada}](https://astamm.github.io/nevada/) for network-valued data, [{fdatest}](https://github.com/astamm/fdatest) for functional data, and unpublished extensions for scalar- and vector-valued data. The new package will extend methods for two-sample testing, ANOVA, hypothesis testing, and confidence estimation to data types arising from TDA. It will inherit non-parametric combination [@pesarin2010permutation], which enables the use of several test statistics in a single hypothesis test, making the combination sensitive to different aspects of the compared underlying distributions.
+
+#### Aim 3
+
+::: {.callout-tip icon="false" title="Ripser for the R community"}
+Refactor {ripserr} with a current implementation of Ripser and connect additional options to R.
+:::
+
+The base implementation of Ripser is written in C++, and {ripserr} provides integration via [{Rcpp}](https://www.rcpp.org). We therefore anticipate that this update will be a straightforward, though not trivial, exercise in C++/R integration. In particular, it will provide options to retrieve representative cycles and cocycles for topological features, which are essential for many practical applications.
+
+## Progress Report
+
+### Specific Aim 1
+
+### Specific Aim 2
+
+Key personnel:
+
+- Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
+
+#### MSI Contributions
+
+##### Theoretical research on permutation tests
+
+MSI read the following lectures:
+
+- The lectures notes of Alessia Pini (Associate Professor, Department of Statistical Sciences, Università Cattolica del Sacro Cuore, Milano, Italy) called *Permutation Tests for Univariate and Multivariate
+Data*.
+- The lecture slides of Simone Vantini (Professor of Statistics, MOX Laboratory for Modeling and Scientific Computing, Dept. of Mathematics - Politecnico di Milano, Italy) called *Permutation Tests*.
+- The lecture slides of AST called *Inference for populations of complex objects*.
+
+She also read the following articles referenced by [{flipr}](https://lmjl-alea.github.io/flipr/):
+
+- Fraser, D. A. S. 2019. “The p-Value Function and Statistical Inference.” The American
+Statistician 73 (sup1): 135–47. <https://doi.org/10.1080/00031305.2018.1556735>.
+- Infanger, Denis, and Arno Schmidt-Trucksäss. 2019. “P Value Functions: An Underused Method to Present Research Results and to Promote Quantitative Reasoning.” Statistics in Medicine 38
+(21): 4189–97. <https://doi.org/10.1002/sim.8293>.
+- Martin, Ryan. 2017. “A Statistical Inference Course Based on p-Values.” The American
+Statistician 71 (2): 128–36. <https://doi.org/10.1080/00031305.2016.1208629>.
+
+Finally, she read all the vignettes on [{flipr}](https://lmjl-alea.github.io/flipr/)'s website:
+
+- Get started
+- The alternative hypothesis in permutation testing - On the exactness of permutation tests
+- Computing plausibility functions
+
+That allowed her to understand how tests by permutations are working, and more precisely which test statistics and ways of permuting data can be used based on the populations and the goals of the tests.
+
+##### Implementation of permutation tests using base R
+
+She dived into the code written in base R (from Alessia Pini and Simone Vantini) that implements the following tests:
+
+- Two univariate populations: independent
+- Two multivariate populations: independent and paired
+- One multivariate population
+- ANOVA (One way, two way) and M-ANOVA
+- Linear regression: global test on all coefficients and test on each coefficient
+
+That allowed her to understand how to implement these different tests, which will allow her to add the ANOVA and the tests on regression coefficients in [{flipr}](https://lmjl-alea.github.io/flipr/).
+
+##### Exploration of how [{flipr}](https://lmjl-alea.github.io/flipr/) works
+
+Use of the [`PlausibilityFunction`](https://lmjl-alea.github.io/flipr/reference/PlausibilityFunction.html) R6 class to do the following tests: 
+
+- Test on two univariate population means
+- Test on two univariate populations means and variances
+- Test on one univariate population mean
+
+That allowed her to understand the implementation of the [{flipr}](https://lmjl-alea.github.io/flipr/) package, how users can use it to perform tests already implemented in flipr and how developers can use it to implement tests for their own complex data.
+
+##### Learning the [**futureverse**](https://www.futureverse.org)
+
+She followed the online tutorial <https://astamm.github.io/futureverse/> to learn how to use the [**futureverse**](https://www.futureverse.org) ecosystem of packages to parallelize code. This is intended to be used for reducing computation time in [{flipr}](https://lmjl-alea.github.io/flipr/).
+
+#### AST Contributions
+
+In addition to MSI supervision, AST focused on the implementation of the soon-to-be {phutil} package (stands for **P**ersistence **H**omology **Util**ities and should be pronounced *futile*), for a TDAverse-opinionated data structure that stores PH data and a number of utility functions to be used by reverse dependencies. Once available, it should be a direct reverse dependency of the {plt} package, which will be the occasion to test and report back on {plt} and {tdarec}.
+
+::: {.callout-note title="Survey of existing classes for PH"}
+A survey of existing classes to host persistence homology (PH) revealed the following three classes:
+
+- the `diagram` class in {TDA}, to which belongs the `diagram` element of the list output of, e.g., `ripsDiag()`; it is a 3-column matrix with attributes for the maximum dimension and the maximum scale (radius);
+- the `PHom` class in {ripserr}, which is a light wrapper around a 3-column data frame;
+- the `persistence` class in {plt}, which is structured as a list whose first element is a list of 2-column matrices and whose other elements are the prime field of coefficients, the maximum dimension, and the maximum scale.
+
+Hence, PH is stored either as a matrix or a data frame and metadata are stored as attributes or additional elements of a list whose first element contains PH data.
+:::
+
+::: {.callout-warning title="Missing features"}
+- None of the above includes possibility of storing extended PH.
+- None of the above keeps track of how the diagram was computed (which filtration, which engine to perform computations, and so on). 
+:::
+
+Storing the diagram as data frame with columns birth, death and maybe dimension generates an overhead and the dimension will be duplicated to store it for each point. Using a list of 2-column matrices seems to be the most memory-efficient strategy. Each element of that list would store the points corresponding to a specific dimension. Extended persistence could be encoded in the following ways:
+
+(1) we might encode type using signs (+ vs –), except that filtration values could be negative, yielding negative births and/or deaths in general settings, so the signs would be serving a different purpose;
+(2) we could store a list of pairs of 2-column matrices, where the length of the list is the maximum degree + 1 and each element is a length-2 list of 2-column matrices, the first one storing ordinary & relative features and the second one storing extended features;
+(3) we could flag the extended features using an integer or logical attribute indicating which matrix rows are extended.
+
+Only the last two options are viable. The second option complexifies the data structure but achieves the lowest memory footprint.
+
+::: {.callout-tip title="Proposed data structure"}
+We propose to use a list of pairs of 2-columns matrices to store PH data. Other metadata will be stored as attributes. That includes prime field of coefficients, maximum dimension, maximum scale (radius), data preprocessing pipeline used to compute PH data (filtration, simplicial complex, engine used to perform computations). Extended persistence will be stored in the second 2-column matrix of each element of the outer list.
+:::
+
+Keeping track of preprocessing steps used to get the PH data
+
+: We will take inspiration from {recipes}. A simple solution could be to store as attribute the recipe object created by the {tdarec} package. However, we should provide the user with the possiblity of coercing the PH data into the proposed data structure which he might have obtained without a recipe from {tdarec}. This raises the question of how to allow the user to provide the information about preprocessing steps and how store that information.
+
+List of S3 methods to implement for the proposed class
+
+: When defining a new class in R, it is important to implement a number of S3 methods for such a class. In particular:
+
+    - a number of method to coerce existing data structures that store PH data into the proposed data structure;
+    - `format()` which in turn influences the way the object is printed in the console;
+    - subset operators;
+    - `as_tibble()` , `as.data.frame()` to coerce the proposed data structure into a data frame.
+
+    Other S3 methods could be relevant since the proposed data structure ains at being shared by a collection of R packages that work well together for performing statistics on topological data. We will investigate which methods have been implemented in the {tibble} package which, similarly, implements a data structure for storing data which is shared across the **tidyverse** collection of packages.
+
+    A number of S3 methods will need to be implemented as well to handle extended persistence. For instance, one might want to focus on ordinary/relative features or extended features, extract them, simplify the data structure in case extended features do not exist, combine both information and so on.
+
+### Specific Aim 3
