@@ -21,9 +21,10 @@ affiliations:
     department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
     city: Gainesville
     country: United States
-date: 2024 November 30
+date: 2024 December 1
 format:
-    typst: default
+    pdf: default
+    html: default
 toc: true
 number-sections: true
 bibliography: references.bib
@@ -74,13 +75,11 @@ The base implementation of Ripser is written in C++, and {ripserr} provides inte
 
 ### Specific Aim 1
 
-Development is well ahead of schedule.
+Development is ahead of schedule.
 UIS and ALU have encouraged feature suggestions and plan continued development of {TDAvec}.
 They have also suggested several improvements to {tdarec}.
 JBR has scripted and validated source code generation for all {TDAvec} vectorizations in {tdarec}.
 Remaining major tasks for {tdarec}---integration and deployment of additional persistent homology engines, implementation of hyperparameter tuners, and completion of longform documentation---should be completed within 2 months.
-
-#### Logistics
 
 Key personnel:
 
@@ -105,19 +104,21 @@ Three specific goals were outlined for the coming months:
 2. Provision of endpoint evaluation as well as interval integration for functions currently vectorized using only the latter; see [issue #2](https://github.com/uislambekov/TDAvec/issues/2).
 This method is less lossy but only feasible (conditional on high efficiency) for suitable functions; unsuitable functions are already vectorized using endpoint evaluation.
 3. Implementation of a feature weight optimization procedure developed by UIS.
-Once completed, JBR will work to expose this feature to the {tdarec} interface.
+Once completed, JBR will work to expose this feature to the {tdarec} interface, though it will not be a prerequisite for the first release.
 
-#### {tdarec} feature requests
+#### {tdarec} development
+
+##### Feature requests
 
 UIS and ALU also made several important recommendations for {tdarec}:
 
 1. Enable users to select (to the exclusion of others) or separate (into multiple list-columns) topological feature sets of different dimensions; see [issue #4](https://github.com/corybrunson/tdarec/issues/4).
-2. Enable users to tune scale sequences (grids over which functions are vectorized) differently by topological feature dimension and by persistent diagram axis.
+2. Enable users to tune scale sequences (grids over which functions are vectorized) differently by topological feature dimension ($0, 1, 2, \ldots$) in addition to providing separate scale sequence tuners for both persistent diagram axes (birth vs death or birth vs persistence).
 3. Consult the research literature and community on appropriate default values and ranges for hyperparameter tuners; see [issue #5](https://github.com/corybrunson/tdarec/issues/5).
 
 Each of these will be addressed as {tdarec} development continues.
 
-#### Common machine learning workflows using vectorizations of persistent homology
+##### Common machine learning workflows using vectorizations of persistent homology
 
 To assess typical applications in machine learning, JBR performed a simple bibliographic search to obtain 15 original studies and reviews thereof that used vectorizations of persistent homology.[^zotero-cases]
 While the methodology of one study was not completely clear, in every other case analysis and modeling proceeded as follows: From each case was generated a distance matrix, image, or point cloud; each resulting data set had its persistent homology computed to obtain a persistence diagram; and each persistent diagram was transformed to a vector in some real feature space $\mathbb{R}^P$.
@@ -126,25 +127,25 @@ This reaffirmed our original assumptions and suggested no major adjustments to t
 
 [^zotero-cases]: <https://www.zotero.org/groups/2902167/r_packages/collections/U64SJ82I>
 
-#### {tdarec} source code generation
+##### Source code generation
 
-The script 'build-tdavec-steps.R' in [the 'build-pre' folder](https://github.com/corybrunson/tdarec/tree/main/build-pre) generates complete source code for recipe steps that call each vectorization from {TDAvec}; see [issue #3](https://github.com/corybrunson/tdarec/issues/3).
+The script `build-tdavec-steps.R` in [the `build-pre` folder](https://github.com/corybrunson/tdarec/tree/main/build-pre) generates complete source code for recipe steps that call each vectorization from {TDAvec}; see [issue #3](https://github.com/corybrunson/tdarec/issues/3).
 Only minor, if any, modifications will be needed to accommodate additions or changes to vectorizations and their parameters in {TDAvec} so long as existing package conventions are maintained.
-JBR will work with UIS to address issues that arise from any more substantive changes.
+JBR will work with UIS to address issues that arise from more substantive changes.
 
-#### {tdarec} engine deployment
+##### Engine deployment
 
 Cubical and alpha persistent homology remain to be exposed as `step_*()` functions in {tdarec}, and logic remains to be scripted to deploy engines based on several user specifications; see [issue #1](https://github.com/corybrunson/tdarec/issues/1).
 This is the primary goal for December.
-Eventually, this will be done via dependency on [{phutil}](https://github.com/tdaverse/phutil), in development by AST.
-However, it can be completed based on similar tools in [{ggtda}](https://github.com/tdaverse/ggtda) if development of [{phutil}](https://github.com/tdaverse/phutil) is not yet complete, then refactored after initial release.
+Eventually, this will be done via dependency on [{phutil}](https://github.com/tdaverse/phutil), in development by MSI and AST.
+However, it can be completed based on similar tools in [{ggtda}](https://github.com/tdaverse/ggtda) if development of {phutil} is not yet complete, then refactored after initial release.
 
-#### {tdarec} hyperparameter tuners
+##### Hyperparameter tuners
 
-The next major goal is to write hyperparameter tuners for all {TDAvec} parameters; currently, the only tuner is for homological degree, in ['param-hom-degree.R'](https://github.com/corybrunson/tdarec/blob/main/R/param-hom-degree.R).
+The next major goal is to write hyperparameter tuners for all {TDAvec} parameters; currently, the only tuner is for homological degree, in [`param-hom-degree.R`](https://github.com/corybrunson/tdarec/blob/main/R/param-hom-degree.R).
 The only conceptual challenge lies with tuning the scale sequence, which may be controlled as a complete increasing numeric sequence or as a set of parameters for the endpoints and either the length or increment of the sequence, as with `base::seq()`.
 
-#### {tdarec} longform documentation
+##### Longform documentation
 
 [The README](https://github.com/corybrunson/tdarec) contains a complete, illustrative exercise in machine learning, which applies vectorizations of persistent homology to the task of classifying point clouds generated from two different embeddings of the Klein bottle in $\mathbb{R}^4$.
 JBR will mix expository text into the exercise before release.
@@ -253,14 +254,14 @@ Keeping track of preprocessing steps used to get the PH data
 
 List of S3 methods to implement for the proposed class
 
-: When defining a new class in R, it is important to implement a number of S3 methods for such a class. In particular:
+: When defining a new class in R, it is important to implement a number of S3 methods. In particular:
 
-    - a number of method to coerce existing data structures that store PH data into the proposed data structure;
-    - `format()` which in turn influences the way the object is printed in the console;
+    - a number of functions to coerce existing data structures that store PH data into the proposed data structure;
+    - `format()`, which in turn influences the way the object is printed in the console;
     - subset operators;
-    - `as_tibble()` , `as.data.frame()` to coerce the proposed data structure into a data frame.
+    - `as.matrix()`, `as.data.frame()`, and `as_tibble()` to coerce the proposed data structure into the data structures assumed by many applications.
 
-    Other S3 methods could be relevant since the proposed data structure ains at being shared by a collection of R packages that work well together for performing statistics on topological data. We will investigate which methods have been implemented in the {tibble} package which, similarly, implements a data structure for storing data which is shared across the **tidyverse** collection of packages.
+    Other S3 methods could be relevant since the proposed data structure ains at being shared by a collection of R packages that work well together for performing statistics on topological data. We will investigate which methods have been implemented in the {tibble} package which, similarly, implements a data structure for storing data which is shared across the Tidyverse collection of packages.
 
     A number of S3 methods will need to be implemented as well to handle extended persistence. For instance, one might want to focus on ordinary/relative features or extended features, extract them, simplify the data structure in case extended features do not exist, combine both information and so on.
 
@@ -270,8 +271,6 @@ Development is on schedule, taking into account the Thanksgiving break and three
 The student research assistants have trained in the essential mathematical and computational background to proceed with development, including validation of hand-worked exercises against Ripser output.
 They have joined the {ripserr} repository as collaborators and forked the Ripser C++ library to study its structure and processes.
 The first phase of development is underway as a direct {Rcpp} adaptation of the current Ripser library, rather than as a revision of the current {ripserr} R package.
-
-#### Logistics
 
 Key personnel:
 
@@ -285,22 +284,29 @@ Repositories:
 * [Ripser fork](https://github.com/strongKs/ripser)
 * [{ripserr}](https://github.com/tdaverse/ripserr/)
 
-#### Mathematical and computational background
+#### Research assistant training
+
+##### Mathematical and computational background
 
 The RAs (KPH, SHE, and AZH) have completed a brief series of lectures with exercises (from JBR) on the mathematical theory of singular homology.
-They have also gained proficiency in the calculation---by hand---of persistent homology for small point clouds (distance matrices derived from coordinate matrices).
+They have also read (at a high level) several manuscripts about persistent homology and the efficiencies used by Ripser that will be key references for the duration [@desilva2011dualities; @chen2011persistent; @bauer2021ripser; @pham2023wagner].
+Finally, they have gained proficiency in the calculation---by hand---of persistent homology for small point clouds (distance matrices derived from coordinate matrices).
 As validation, they have replicated these examples using the command line Ripser tool.
 They will continue with similar exercises as development continues.
 
-#### Familiarization with Ripser
+##### Familiarization with Ripser
 
 In addition to validation against manual examples, the RAs have extensively explored Ripser via direct inspection and checkpoint execution in debug mode.
 They have prepared detailed documentation of the library that will guide the adaptation.[^ripser-structure]
 
-[^ripser-structure]: <https://docs.google.com/document/d/1Mi7PxgvZuYiu_fubsw8J5UYhxCJyWM0UBCa29hJrbsk/> -- We will share the document with an email address upon request.
+[^ripser-structure]: <https://docs.google.com/document/d/1Mi7PxgvZuYiu_fubsw8J5UYhxCJyWM0UBCa29hJrbsk/> -- While it is not public, then we will share the document upon request.
 
-#### {Rcpp} packaging of C++ library
+#### {ripserr} development
+
+##### {Rcpp} packaging of C++ library
 
 The RAs considered two approaches to a first upgrade: "fitting" the current Ripser library into the existing {ripserr} package, or building an {Rcpp} wrapper from scratch.
-They decided on the latter approach; an export to R via {Rcpp} is drafted in [the `first-transition-to-R` branch](https://github.com/StrongKs/ripser/tree/first-transition-to-R) of KPH's fork of the Ripser repo.
-Upon completion, the reorganized and R-exported code will be grafted to a branch of {ripserr}, replacing the current 'ripser_short.cpp' source.
+They decided on the latter approach; an export to R via {Rcpp} is being drafted in [the `first-transition-to-R` branch](https://github.com/StrongKs/ripser/tree/first-transition-to-R) of KPH's fork of the Ripser repo.
+Upon completion, the reorganized and R-exported code will be grafted to a branch of {ripserr}, replacing the current [`ripser_short.cpp`](https://github.com/tdaverse/ripserr/blob/main/src/ripser_short.cpp) source.
+
+## References
