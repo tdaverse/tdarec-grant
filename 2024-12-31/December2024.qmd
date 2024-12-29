@@ -1,0 +1,101 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "December Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 January 1
+format:
+    pdf: default
+    html: default
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview
+
+Development slowed on all fronts as institutions closed and investigators paused for the festive season.
+That said, incremental progress continued, and the project as a whole is on schedule.
+
+## Specific Aim 1
+
+Key personnel:
+
+* Jason Cory Brunson (JBR), Mathematician, University of Florida (UF)
+
+Collaborators:
+
+* Umar Islambekov (UIS), Data Scientist, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Data Scientist, BGSU
+
+Repositories:
+
+* [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+### {tdarec} development
+
+#### Persistent homology step for image data
+
+The new step [`step_phom_image()`](https://github.com/corybrunson/tdarec/blob/main/R/step-phom-image.R), a companion to `step_phom_point_cloud()`, computes cubical persistent homology (PH) for images, which are assumed to be encoded as 2-, 3-, or 4-dimensional numeric arrays.
+See [issue #2](https://github.com/corybrunson/tdarec/issues/2) for the reasoning behind the scoping of these two (and any future) steps.
+The step is fully documented and includes [an example](https://github.com/corybrunson/tdarec/blob/main/inst/examples/ex-step-phom-image.R) using the MNIST data.
+
+#### Unit tests for point cloud PH step
+
+[A comprehensive set of unit tests](https://github.com/corybrunson/tdarec/blob/main/tests/testthat/test-step-phom-point-cloud.R) follow patterns set in the {recipes} unit tests with additional checks specific to this transformation. (The step as implemented passes all tests.)
+The tests should be readily extensible to image and other PH steps, but this will be postponed until closer to release in case additional tests are deemed necessary.
+
+#### Remaining goals
+
+The following remaining goals, detailed in previous progress reports, are roughly in order of priority:
+
+* Better-documented example in README
+* Hyperparameter tuner for scale sequence
+* Hyperparameter tuners for simple parameters
+* Complete vignette
+* Deployment to multiple PH engines
+
+## Specific Aim 2
+
+Key personnel:
+
+- Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
+
+
+
+## Specific Aim 3
+
+Key personnel:
+
+* Jason Cory Brunson (JBR), Mathematician, UF
+* Kent Phipps (KPH), undergraduate student, UF
+* Sean Hershkowitz (SHE), undergraduate student, UF
+* Alice Zhang (AZH), undergraduate student, UF
+
+Repositories:
+
+* [Ripser fork](https://github.com/strongKs/ripser)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+
+
+## References
