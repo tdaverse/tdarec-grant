@@ -77,10 +77,84 @@ The following remaining goals, detailed in previous progress reports, are roughl
 
 Key personnel:
 
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
 - Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
 - Aymeric Stamm (AST), Research Engineer, CNRS
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
 
+The following diagram summarises the designed ecosystem of packages for inferential purposes as a tree of package dependencies:
 
+![](../tdainfer-deps.png)
+
+### [**permaverse**](https://github.com/permaverse) GitHub organisation
+
+The philosophy behind {flipr} was to develop a generic package for implementing permutation schemes for inferential purposes in a way that is agnostic to the type of data. As a result, any package developed for a specific type of data could depend on {flipr} and benefit from a centralized, well-maintained solution for handling the permutation schemes.
+
+This led to the development of:
+
+- [{flipr}](https://permaverse.github.io/flipr/), authored by API, AST and SVA and maintained by AST for generic permutation schemes;
+- [{nevada}](https://permaverse.github.io/nevada/), authored and maintained by AST, that targets populations of graphs (network-valued data);
+- [{fdatest}](https://github.com/permaverse/fdatest), authored and maintained by API, that targets populations of curves (functional data);
+- [{flipscalar}](https://github.com/permaverse/flipscalar) and {flipvector}, maintained by AST, that targets classical univariate and multivariate data, which are still in development.
+
+This ecosystem is in fact separate from the tdaverse but shoule share a non-null intersection through the package {inphr}, which will implement permutation tests and confidence regions for persistence homology data.
+
+The original authors of the {flipr} package have, as of December, created a GitHub organisation named **permaverse** to host all packages developed in the team on inference for specific types of data. Ownerships of {flipr}, {flipscalar}, {nevada} and {fdatest} have been transferred to the organisation of which API and AST are owners and MSI is member.
+
+### {flipr} development
+
+The further development of {flipr} has mainly been carried out by MSI. She dived more and more into the theory of permutation tests to better understand how {flipr} is designed. Specifically, she worked on the following issues:
+
+[#11](https://github.com/permaverse/flipr/issues/11) Use {future} and {cli} packages for computation instead of {pbapply}.
+
+: The package {pbabbly} has been removed from {flipr} and replaced with the {furrr} package: in particular, `future_map()` replaces `pblapply()` and `future_map_dbl()` replaces `pbsapply()`. The package {progressr} is now used to visualize evaluation progress with a progress bar.
+
+: The `ncores` parameter has been removed from {flipr} following the principle of separation of concerns. The developer should be responsible of allowing for parallel computing but cannot know the user's resources. That implied also removing the use of {parallel} functions in {flipr}.
+
+: A vignette has been created to explain how the user can set parallelization before using {flipr} functions, using {future} and {parallel} to set the desired number of background R sessions to use for parallel processing, and using {progressr} to enable progress bar visualization.
+
+: These modifications are part of a pull request for review.
+
+[#12](https://github.com/permaverse/flipr/issues/12) Use viridis only as suggested package.
+
+: The package {viridis} is used in the `plot_pf()` function to plot the plausibility function. It is now only used if detected and thus has been moved from the `Imports` to the `Suggests` section in the `DESCRIPTION` file. If the package is not installed on the user computer, the default {ggplot2} palette is used.
+
+: Corrections were also made in this function to print correct informations in title and subtitle. The `seed` parameter has been moved to public in the `PlausibilityFunction` class, but will most likely be removed in the future (see Issue [#16](https://github.com/permaverse/flipr/issues/16)).
+
+: These modifications have been merged in the master branch of {flipr} and the issue has been closed.
+
+[#13](https://github.com/permaverse/flipr/issues/13) Adapt code following deprecations in dials.
+
+: The issue has been closed because the default argument was not used in the package anymore.
+
+Permutation schemes for ANOVA.
+
+: The already present functions `anova_test()` and `stat_anova_f()` have been tested. They work well to perform a one-way (M)ANOVA. It can be used to get a single p-value but not yet to get an entire plausibility function.
+
+: The ANOVA test will be added to the `get_value()` method of the `PlausibilityFunction` class. Two-way ANOVA will be tentatively added as well.
+
+### {phutil} development
+
+The development of {phutil} is on hold until AST meets with BMI, which is one of the two members of the advisory committee, to discuss how extended persistence is intended to be used currently and in the future. This should help take a better informed decision on which R structure would best host persistence homology information.
+
+### {fdatest} development
+
+Inference for functional representations of persistence homology in {inphr} will mainly be a by-product of the inferential procedures implemented in the {fdatest} package. This package implements domain-selection for functional data [@abramowicz2023domain] which essentially detect on which portion of the domain do curves statistically differ.
+
+This package was developed by API years before {flipr} was born. It does not yet depend on it. Development of {fdatest} is now led by AST and the dependency to {flipr} will be added as soon as MSI is done with implementing ANOVA and regression permutation schemes in {flipr}. For now, here is the to-do list of actions for pushing forward the development of {fdatest}:
+
+- Documentation
+
+    - Remove use of `\code{}` and `\link{}` in favour of markdown syntax;
+    - Rewrite all the documentation with inheritance mechanism of {roxygen2};
+    - Deprecate all functions starting with `ITP*()`.
+
+- Replace all `=` used as assignment with the proper assignment operator `<-`;
+- Implement unit tests as good practice but also to make sure that the later transition to using {flipr} does not break the current code;
+- Generate a proper website for the package;
+- Add GitHub actions for continuous integration;
+- Transition to {flipr} for handling permutation schemes.
 
 ## Specific Aim 3
 
