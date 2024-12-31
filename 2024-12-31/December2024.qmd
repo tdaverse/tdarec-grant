@@ -31,6 +31,17 @@ bibliography: ../references.bib
 
 ## Overview
 
+To recap, the aims of the project are as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
 Development slowed on all fronts as institutions closed and investigators paused for the festive season.
 That said, incremental progress continued, and the project as a whole is on schedule.
 
@@ -38,12 +49,12 @@ That said, incremental progress continued, and the project as a whole is on sche
 
 Key personnel:
 
-* Jason Cory Brunson (JBR), Mathematician, University of Florida (UF)
+* Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
 
 Collaborators:
 
-* Umar Islambekov (UIS), Data Scientist, Bowling Green State University (BGSU)
-* Aleksei Luchinsky (ALU), Data Scientist, BGSU
+* Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
 
 Repositories:
 
@@ -98,7 +109,7 @@ This led to the development of:
 - [{fdatest}](https://github.com/permaverse/fdatest), authored and maintained by API, that targets populations of curves (functional data);
 - [{flipscalar}](https://github.com/permaverse/flipscalar) and {flipvector}, maintained by AST, that targets classical univariate and multivariate data, which are still in development.
 
-This ecosystem is in fact separate from the tdaverse but shoule share a non-null intersection through the package {inphr}, which will implement permutation tests and confidence regions for persistence homology data.
+This ecosystem is in fact separate from the tdaverse but will share a non-null intersection through the package {inphr}, which will implement permutation tests and confidence regions for persistence homology data.
 
 The original authors of the {flipr} package have, as of December, created a GitHub organisation named **permaverse** to host all packages developed in the team on inference for specific types of data. Ownerships of {flipr}, {flipscalar}, {nevada} and {fdatest} have been transferred to the organisation of which API and AST are owners and MSI is member.
 
@@ -136,7 +147,7 @@ Permutation schemes for ANOVA.
 
 ### {phutil} development
 
-The development of {phutil} is on hold until AST meets with BMI, which is one of the two members of the advisory committee, to discuss how extended persistence is intended to be used currently and in the future. This should help take a better informed decision on which R structure would best host persistence homology information.
+The development of {phutil} is on hold until AST meets with BMI, who is one of the two members of the advisory committee, to discuss how extended persistence is intended to be used currently and in the future. This should help take a better informed decision on which R structure would best host persistence homology information.
 
 ### {fdatest} development
 
@@ -160,16 +171,27 @@ This package was developed by API years before {flipr} was born. It does not yet
 
 Key personnel:
 
-* Jason Cory Brunson (JBR), Mathematician, UF
-* Kent Phipps (KPH), undergraduate student, UF
-* Sean Hershkowitz (SHE), undergraduate student, UF
-* Alice Zhang (AZH), undergraduate student, UF
+* Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
 
 Repositories:
 
 * [Ripser fork](https://github.com/strongKs/ripser)
 * [{ripserr}](https://github.com/tdaverse/ripserr/)
 
+### Ripser adaptation
 
+AZH, SHE, and KPH have continued to adapt their fork of Ripser to R through {Rcpp} integration.
+All input formats and parameters are now supported in R.
+Additionally, several R-level user-facing functions execute C++ subroutines that have aided in debugging and may be retained for the R package upgrade.
+Finally, the C++ code has been thoroughly commented.
+(See [pull request #2](https://github.com/StrongKs/ripser/pull/2) for details.)
+
+Finally, a C++ header file `ripser_short.h` has been spun off the source code file `ripser.cpp`; see [pull request #3](https://github.com/StrongKs/ripser/pull/3).
+The header file contains dependency calls, template definitions, and helper functions so that the source file, containing primary functions, is easier (for humans) to parse.
+
+(A notable advantage of the RAs' approach is that future upgrades to the R package {ripserr} can be expedited by first directly merging Ripser upgrades to this fork, where testing and debugging can be done on this intermediate R package reorganization prior to integration into the primary R package repo.)
 
 ## References
