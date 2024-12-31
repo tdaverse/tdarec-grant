@@ -27,7 +27,7 @@ format:
     html: default
 toc: true
 number-sections: true
-bibliography: references.bib
+bibliography: ../references.bib
 ---
 
 ## Proposal
