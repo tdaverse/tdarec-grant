@@ -86,6 +86,19 @@ The following diagram summarises the designed ecosystem of packages for inferent
 
 #### {flipr} development
 
+Issue [#11](https://github.com/permaverse/flipr/issues/11) -- Use {future} for computation instead of {pbapply}.
+
+: After adding {furrr} and {progressr} to {flipr}, the vignette created on this subject has been improved to add computation time comparison between sequential and multisession processing. It allows the user to see the importance of setting parallelization before using {flipr} functions and it shows that parallel processing is set correctly in the package.
+
+ANOVA in {flipr}.
+
+: To add ANOVA and tests on regression coefficients, the data structure used in {flipr} has been changed to a list containing two or three elements. Data given by the user is transformed to respect this new format that is used in all {flipr} functions.
+For tests on k samples, the format is (response variable.s, group memberships) and the format will be (response variable, qualitative variables, other variables) for regression. Tests already implemented for one and two sample tests still pass with this new format.
+
+: The ANOVA case has been added into the Plausibility function, it can be used to get a single p-value but not yet to get an entire plausibility function. Tests are currently being done to complete the ANOVA implementation and to make a vignette on this subject.
+
+: Once ANOVA implementation is done, tests on regression coefficients will be added.
+
 #### {fdatest} development
 
 Inference for functional representations of persistence homology in {inphr} will mainly be a by-product of the inferential procedures implemented in the {fdatest} package. This package implements domain-selection for functional data [@abramowicz2023domain;@pini2017interval] which essentially detect on which portion of the domain do curves statistically differ.
