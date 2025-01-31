@@ -1,0 +1,133 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "December Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 January 31
+format:
+    pdf: default
+    html: default
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview
+
+To recap, the aims of the project are as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
+Development slowed on all fronts as institutions closed and investigators paused for the festive season.
+That said, incremental progress continued, and the project as a whole is on schedule.
+
+## Specific Aim 1
+
+Key personnel:
+
+* Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+
+Collaborators:
+
+* Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
+
+Repositories:
+
+* [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+## Specific Aim 2
+
+Key personnel
+
+: - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
+- Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
+
+Repositories
+
+: - [{flipr}](https://permaverse.github.io/flipr/): The goal of the flipr package is to provide a flexible framework for making inference via permutation. The idea is to promote the permutation framework as an incredibly well-suited tool for inference on complex data. You supply your data, as complex as it might be, in the form of lists in which each entry stores one data point in a representation that suits you and flipr takes care of the permutation magic and provides you with either point estimates or confidence regions or p-value of hypothesis tests.
+- [{fdatest}](https://permaverse.github.io/fdatest/): The goal of fdatest is to implement various statistical methods for domain selection in functional data analysis, that is selecting a subset of the domain where the difference between two populations is significant. The package is based on the paper by @abramowicz2023domain and @pini2017interval.
+- [{phutil}](https://github.com/tdaverse/phutil): Helper package for the tdaverse and host of the chosen persistent homology representation. Mostly empty at the moment.
+
+The following diagram summarises the designed ecosystem of packages for inferential purposes as a tree of package dependencies:
+
+![](../tdainfer-deps.png)
+
+### [**permaverse**](https://github.com/permaverse)
+
+#### {flipr} development
+
+#### {fdatest} development
+
+Inference for functional representations of persistence homology in {inphr} will mainly be a by-product of the inferential procedures implemented in the {fdatest} package. This package implements domain-selection for functional data [@abramowicz2023domain;@pini2017interval] which essentially detect on which portion of the domain do curves statistically differ.
+
+Achieved
+
+: - Replace all equals in code with assignment operator `<-`;
+- All ITP functions are now deprecated;
+- The package has an official website;
+- Continuous integration has been added to run `R CMD check` on PRs and pushes to the main branch, as well as to monitor unit testing coverage progress and to automatically update the website when needed;
+- A `README` has been added with a minimal usecase;
+- The use of `data()` has been removed;
+- A GPL-3 license has been added at the moment as other dependencies are GPL-like;
+- The package now uses [{cli}](https://cli.r-lib.org) to power nicely displayed messages, warnings and errors to the console.
+
+Remaining goals
+
+: - Remove `\code{}` in favour of markdown syntax in documentation;
+- Clarify the API;
+- Redo all the documentation with inheritance;
+- Implement unit tests;
+- Move references to fdatest-package.R file;
+- Integrate dependency to {flipr} to handle permutation schemes: that last goal will be done **after** unit tests have been implemented and ANOVA and regression permutation schemes added to {flipr}.
+
+### [**tdaverse**](https://github.com/tdaverse)
+
+#### {phutil} development
+
+The development of {phutil} is on hold until AST meets with MCA, who has extensive expertise in using extended persistence in machine learning pipelines in Python, to discuss how extended persistence is used currently. This should help take a better informed decision on which R structure would best host persistence homology information.
+
+## Specific Aim 3
+
+Key personnel:
+
+* Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
+
+Repositories:
+
+* [Ripser fork](https://github.com/strongKs/ripser)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+## References
