@@ -1,6 +1,6 @@
 ---
 title: "Modular, interoperable, and extensible topological data analysis in R"
-subtitle: "December Progress Report"
+subtitle: "January Progress Report"
 author:
   - name: Jason Cory Brunson
     affiliations:
@@ -42,34 +42,77 @@ Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutatio
 **Aim 3:**
 Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
 
-Development slowed on all fronts as institutions closed and investigators paused for the festive season.
-That said, incremental progress continued, and the project as a whole is on schedule.
+Development has resumed apace in 2025.
+
+Additionally, the co-investigators met with the Advisory Board and one research assistant on January 31 to discuss progress and invite questions and requests.
+Two key needs were highlighted:
+* The current and planned dependencies and interoperabilities of TDAverse, Permaverse, and other packages should be better documented, including with a larger diagram in the style of that shown below for a subset.
+* A public resource, for example a software journal article or a CRAN Task View, should be written to lay out in one place the available resources for topological data analysis in R.
+
+The co-Investigators will take up these tasks in the coming months.
 
 ## Specific Aim 1
 
-Key personnel:
+Key personnel
 
-* Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
 
-Collaborators:
+Collaborators
 
-* Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+: * Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
 * Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
 
-Repositories:
+Repositories
 
-* [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+: * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
 * [{tdarec}](https://github.com/corybrunson/tdarec)
+
+### {TDAvec} upgrade
+
+UIS pushed a new version of {TDAvec} to GitHub, largely in response to needs and requests from JBR or conveyed from colleagues.
+All vectorizations described in the proposal are now included, as well as several others.
+Additionally, linear algebraic operations have been made more efficient through dependency on {RcppArmadillo}.
+JBR will raise several minor issues shortly having to do with the consistency of syntaxt, output, and documentation.
+
+### {tdarec} development
+
+#### code generation
+
+In response to the {TDAvec} upgrade, automatic code generation required minor tweaks but otherwise worked as expected to create new `step_*()` functions.
+
+#### Complete vignette, using Bayesian optimization
+
+As recommended by @motta2019hyperparameter, JBR drafted a vignette using Bayesian optimization to tune model hyperparameters.
+This revealed problems with the simultaneous handling of pre-processing and model hyperparameters in the same workflow, which JBR raised as an issue ([#1405](https://github.com/tidymodels/recipes/issues/1405)).
+This is not a dealbreaker; if it is not resolved in time, then a simpler vignette will be written and a _nota bene_ included to warn users of the issue.
+
+#### Hyperparameter tuners for simple parameters
+
+A second code generation script is underway to write hyperparameter tuners for most hyperparameters used in {TDAvec}.
+The exceptions are `scaleSeq` (the scale sequence) and its likenesses used to define 1- and 2-dimensional discretization grids.
+JBR and UIS discussed how best to enable users to tune this grid without overcomplicating the process.
+The plan for the coming month is to expose a single tuning parameter: the length (number of cells) along each axis of the grid.
+
+#### Remaining goals
+
+The following remaining goals, detailed in previous progress reports, are roughly in order of priority:
+
+* Better-documented example in README
+* Hyperparameter tuner for scale sequence
+* Deployment to multiple PH engines
 
 ## Specific Aim 2
 
 Key personnel
 
+: - Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
+
+Collaborators
+
 : - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
 - Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
 - Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
-- Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
-- Aymeric Stamm (AST), Research Engineer, CNRS
 - Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
 
 Repositories
@@ -131,16 +174,25 @@ The development of {phutil} is on hold until AST meets with MCA, who has extensi
 
 ## Specific Aim 3
 
-Key personnel:
+Key personnel
 
-* Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
 * Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
 * Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
 * Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
 
-Repositories:
+Repositories
 
-* [Ripser fork](https://github.com/strongKs/ripser)
+: * [Ripser fork](https://github.com/strongKs/ripser)
 * [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+### {ripserr} upgrade
+
+The prototype upgrade successfully compiles and executes calculations successfully, signaling that the major barriers have been overcome.
+
+That said, development has been slow, in part due to the challenge of coordinating work by all 3 student RAs on the same repo.
+In response, the RAs have decided to take a two-pronged approch: (1) KPH and SHE will continue the work of substituting the current Ripser code base into {ripserr}. Meanwhile, (2) AZH is building a {ripserr}-style Rcpp package around Ripser.
+We expect that each approach will have its own benefits and drawbacks, which will inform our decisions and documentation.
+Upon completion, the two prototypes will be used to validate each other before (1) is finalized for release.
 
 ## References
