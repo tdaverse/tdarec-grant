@@ -1,0 +1,121 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "February Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 January 31
+format:
+    pdf: default
+    html: default
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview
+
+To recap, the aims of the project are as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
+**TODO: Summarize the report here.**
+
+## Specific Aim 1
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+
+Collaborators
+
+: * Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
+
+Repositories
+
+: * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+Minimal work was put into Aim 1 this month as JBR worked more closely with the student research assistants on Aim 3.
+
+### {TDAvec} upgrade
+
+UIS and ALU made further revisions to {TDAvec} that addressed JBR's feedback on the recent upgrade.
+Further upgrades are likely, but design changes are likely to be less substantive.
+
+### {tdarec} development
+
+#### code generation
+
+Revisions to automatic code generation was completed in response to the {TDAvec} upgrade.
+Examples are also automatically generated.
+A final revision will automatically generate basic unit tests.
+
+#### Complete vignette, using Bayesian optimization
+
+The issue described in the previous report has not been addressed, so the plan for next month is to simplify the vignette but store the more complex vignette for future use.
+
+#### Remaining goals
+
+Together with previously listed goals, these remain to finalize the package:
+
+* Automatically generate unit tests for step functions
+* Simplify and finalize the Bayesian optimization vignette
+* Complete code generation script for hyperparameter tuners
+* Design a standalone hyperparameter tuner for the scale sequence (discretization grid)
+* Write a clearer example in the README
+* Deploy PH computations to multiple engines
+
+## Specific Aim 2
+
+
+
+## Specific Aim 3
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+
+Repositories
+
+: * [Ripser fork](https://github.com/strongKs/ripser)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+### {ripserr} upgrade
+
+JBR worked closely with the RAs this month to troubleshoot errors arising from the complexity of the Ripser code base.
+As mentioned in the previous report, KPH and SHE are working to upgrade the existing R package while AZH is building an R package from scratch around the C++ library.
+The first approach has led to a package upgrade that is installable with the new source code; the remaining tasks are mostly cosmetic, most significantly to store the persistent pairs as they are generated and return them to the user as an object, rather than print them to the console as Ripser does.
+The second approach has raised new challenges with the work environment (notably the choice and features of the interactive development environment) but none yet with the changes to the code base.
+
+To maintain the proposed timetable, both approaches will need to be fully functional by the end of March so that time remains to consolidate them into a single upgrade.
+JBR will continue to work closely with the RAs while completing the less technical, more expository tasks associated with Aim 1.
+
+## References
