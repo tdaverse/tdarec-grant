@@ -29,7 +29,7 @@ number-sections: true
 bibliography: ../references.bib
 ---
 
-## Overview
+## Overview {-}
 
 To recap, the aims of the project are as follows:
 
@@ -110,12 +110,13 @@ Repositories
 
 ### {ripserr} upgrade
 
-JBR worked closely with the RAs this month to troubleshoot errors arising from the complexity of the Ripser code base.
+JBR worked closely with the research assistants this month to troubleshoot errors arising from the complexity of the Ripser code base.
 As mentioned in the previous report, KPH and SHE are working to upgrade the existing R package while AZH is building an R package from scratch around the C++ library.
-The first approach has led to a package upgrade that is installable with the new source code; the remaining tasks are mostly cosmetic, most significantly to store the persistent pairs as they are generated and return them to the user as an object, rather than print them to the console as Ripser does.
-The second approach has raised new challenges with the work environment (notably the choice and features of the interactive development environment) but none yet with the changes to the code base.
+
+The first approach has led to a package upgrade that is installable with the new source code; see [the `RcppPackage-RstudioProj` branch](https://github.com/StrongKs/ripser/tree/RcppPackage-RstudioProj) on KPH's account. The remaining tasks are mostly cosmetic, most significantly to store the persistent pairs as they are generated and return them to the user as an object, rather than print them to the console as Ripser does.
+The second approach has raised new challenges with the work environment (notably the choice and features of the interactive development environment) but none yet with the changes to the code base; see [the `add-vector` branch](https://github.com/resetdisconnect/ripser/tree/add-vector) on AZH's account.
 
 To maintain the proposed timetable, both approaches will need to be fully functional by the end of March so that time remains to consolidate them into a single upgrade.
 JBR will continue to work closely with the RAs while completing the less technical, more expository tasks associated with Aim 1.
 
-## References
+## References {-}
