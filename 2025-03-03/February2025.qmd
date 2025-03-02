@@ -69,7 +69,7 @@ Further upgrades are likely, but design changes are likely to be less substantiv
 
 ### {tdarec} development
 
-#### code generation
+#### Code generation
 
 Revisions to automatic code generation was completed in response to the {TDAvec} upgrade.
 Examples are also automatically generated.
@@ -105,7 +105,8 @@ Key personnel
 
 Repositories
 
-: * [Ripser fork](https://github.com/strongKs/ripser)
+: * [KPH Ripser fork](https://github.com/strongKs/ripser/)
+* [AZH Ripser fork](https://github.com/resetdisconnect/ripser/)
 * [{ripserr}](https://github.com/tdaverse/ripserr/)
 
 ### {ripserr} upgrade
