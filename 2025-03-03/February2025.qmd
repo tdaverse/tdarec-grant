@@ -92,7 +92,95 @@ Together with previously listed goals, these remain to finalize the package:
 
 ## Specific Aim 2
 
+Key personnel
 
+: - Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
+
+Collaborators
+
+: - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
+
+### {flipr}
+
+Most of the resources have been spent this month into {flipr} to add permutation schemes for (M)ANOVA and regression in a way that is generic enough to be adapted to any kind of input data as the original design was thought for the two-sample testing problem only.
+
+#### ANOVA
+
+Implementation of permutation schemes for (M)ANOVA has been completed. User can now perform tests on $k$ samples, $k > 2$ to get the entire plausibility function. User can pass data in the plausibility function as two possible formats:
+
+- An object with all samples and a factor containing group memberships.
+- Each sample representing a group. Samples can be univariate or multivariate.
+
+![3D Visualization of the plausibility function from the differences in mean between three different specis of chicken. Data is `chickwts` from the {datasets} package.](anova-pf.png){#fig-anova-pf}
+
+@fig-anova-pf shows the plausibility function resulting from an ANOVA on 3 univariate samples, to test the equality between the mean of each sample.
+A vignette has been added to show users how to perform ANOVA for multivariate data and tests have been added to the package to maintain coverage.
+The use of a data frame in the `$get_value()` method of the plausibility function class may need to be changed to make it more generic for other types of input data.
+
+#### Vignettes in Quarto
+
+All vignettes have been converted from Rmarkdown to Quarto. There is still an issue to build the website with pkgdown on GitHub (see [#26](https://github.com/permaverse/flipr/issues/26)).
+
+#### Regression
+
+Tests on regression coefficients have been implemented in {flipr} to perform two types of tests:
+
+- Test of the effect of one coefficient (with the t-statistic).
+- Global test on all coefficients (with the F-statistic).
+
+A new format has been added to `convert_to_list()` that returns a list of 3 elements: response variable, qualitative variables, other variables.This new case is handled in `get_value()` to call the new function `regression_test()`. 
+For test on one coefficient, the residuals of the reduced model are permuted.
+For global test, the response is permuted.
+
+There are now two implemented statistics for linear models:
+
+- `stat_lm()` for tests on one coefficient.
+- `stat_lm_global()` for global tests.
+
+Tests on regression coefficients are a little different than the other already implemented tests. The null specification needs to have three arguments: the response variable, the regressors and the parameters. The implementation uses named lists to link the index of the coefficient to test with its parameter value, and to differentiate global tests with tests on one coefficient.
+
+For now, the global test does not work yet to compute the entire plausibility function. Test for one coefficient works but there is a strange phenomenon happening with the shape of the plausibility function that has to be investigated. A vignette has been written to show how to perform the tests with an example of null specification for linear models and shows the encountered issue.
+
+#### Design choices
+
+Two downsides of the current implementation are:
+
+- for ANOVA to rely on the data frame structure which might not work well with all data formats that external users might want to use {flipr} with;
+- for regression, it forces to implement statistic functions with three arguments while they only have two for one-sample, two-sample and ANOVA cases; also the current implementation requires named list for the `parameters` argument to keep track on which coefficient is under investigation which is not optimal.
+
+Next steps are with high probability to switch to the `formula` approach which allows one to clearly specify the model and refer to the coefficients in a structured way. All 4 cases (one-sample, two-sample, ANOVA, regression) could be handled via the pair formula and permuted indices which would make for a nice common interface.
+
+### {phutil}
+
+JBR and AST met with MCA to discuss suitable data structure to host persistence persistence diagrams and their extended versions. We operate on the premises that a persistence diagram only has features for a single dimension, and refer to these structures as *persistence data* (PD) instead. PD below allows for multiple degrees of features as well as multiple types of extended features.
+ 
+General principles
+
+: * Arrays are preferred for ML software because they tend to be more efficient and flexible structures.
+* Python implementations typically use numpy arrays.
+* It is likely to be more efficient to keep categories like dimension/degree and extended persistence type (ord, rel, ext+, ext–) separate, e.g. as in the GUDHI structure described below.
+* While certain structures might be favored over others, many different structures could be made to work; probably there is no "best" structure.
+ 
+Data structures disfavored for ML
+
+: $p \times 3$ matrices or data frames of degree, birth, and death:
+
+1. It is preferable for matrix columns to be homogeneous, but degree is ordinal while birth and death are real-valued. Subsequent ML algorithms would treat them all as features while degree should be treated differently.
+2. There is a risk of existing functions treating these matrices as though they are coordinates or other features; a more complicated structure would prevent this and require the user to teach the software how to handle PDs.
+ 
+Existing implementations
+
+: * GUDHI stores PDs as lists of pairs of pairs, so a diagram containing the birth–death pair $(0.5, 0.7)$ for dimension 1 among other features would look like this: $[\dots, [ 1, [0.5, 0.7]], \dots]$.
+* scikit-learn stores PDs as lists of $p \times 2$ arrays with the list position indicating the feature dimension/degree, so the same diagram would look like this: $[ [\dots], [\dots, [0.5, 0.7], \dots], [\dots], \dots]$.
+* GUDHI stores extended PDs as lists of length 4; each element is a GUDHI PD as described above, and they correspond to the ordinary, relative, positive extended, and negative extended types.
+ 
+One option specific to R is that we make separate classes for ordinary PDs and extended PDs. The ordinary ones could be lists of $p \times 2$ matrices (similar to the scikit-learn structure but with the pairs arranged in matrices), while the extended ones could be quadruples of lists of $p \times 2$ matrices, or maybe lists of quadruples of $p \times 2$ matrices, depending on whether we think dimension/degree or extended type takes precedence. It might be preferable to use quadruples of lists of $p \times 2$ matrices, so that one element extraction of that structure could be nicely coerced into the simpler PD class.
+
+Alternatively, we could use a single structure for both, but it might contain some empty lists when the PD is ordinary.
 
 ## Specific Aim 3
 
