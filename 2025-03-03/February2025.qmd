@@ -42,7 +42,10 @@ Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutatio
 **Aim 3:**
 Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
 
-**TODO: Summarize the report here.**
+Most core structure has been completed: {TDAvec} conventions have settled and {tdarec} code generation is complete; {flipr} design has stabilized and {inphr} development has begun; a standard data structure for persistent homology has beed tentatively decided for {phutil}; and the current Ripser code base has been successfully integrated into a draft R package.
+
+Much development remains to be done, in addition to documentation at several levels (code base, README, website), but we feel confident proposing the following months for CRAN submission (though we cannot guarantee publication): {tdarec} in April, {inphr} in May, and {ripserr} in June.
+We understand from exchanges with Terry Christiani and Jesse Casman that the R Consortium would like to publish one blog post for each package release---which may in fact be more than the number of aims---and we will coordinate with them to provide these posts in tandem with CRAN submissions.
 
 ## Specific Aim 1
 
@@ -81,11 +84,11 @@ The issue described in the previous report has not been addressed, so the plan f
 
 #### Remaining goals
 
-Together with previously listed goals, these remain to finalize the package:
+Together with previously listed goals, these remain to finalize the package. Boldfaced goals are planned for the coming month (March) and would suffice for a first release and submission to CRAN:
 
-* Automatically generate unit tests for step functions
-* Simplify and finalize the Bayesian optimization vignette
-* Complete code generation script for hyperparameter tuners
+* **Automatically generate unit tests for step functions**
+* **Simplify and finalize the Bayesian optimization vignette**
+* **Complete code generation script for hyperparameter tuners**
 * Design a standalone hyperparameter tuner for the scale sequence (discretization grid)
 * Write a clearer example in the README
 * Deploy PH computations to multiple engines
@@ -157,6 +160,7 @@ Next steps are with high probability to switch to the `formula` approach which a
 ### {phutil}
 
 JBR and AST met with MCA to discuss suitable data structure to host persistence persistence diagrams and their extended versions. We operate on the premises that a persistence diagram only has features for a single dimension, and refer to these structures as *persistence data* (PD) instead. PD below allows for multiple degrees of features as well as multiple types of extended features.
+Follows a summary of the discussion:
  
 General principles
 
@@ -167,10 +171,7 @@ General principles
  
 Data structures disfavored for ML
 
-: $p \times 3$ matrices or data frames of degree, birth, and death:
-
-1. It is preferable for matrix columns to be homogeneous, but degree is ordinal while birth and death are real-valued. Subsequent ML algorithms would treat them all as features while degree should be treated differently.
-2. There is a risk of existing functions treating these matrices as though they are coordinates or other features; a more complicated structure would prevent this and require the user to teach the software how to handle PDs.
+: * $p \times 3$ matrices or data frames of degree, birth, and death are disfavored for two reasons: (1) It is preferable for matrix columns to be homogeneous, but degree is ordinal while birth and death are real-valued. Subsequent ML algorithms would treat them all as features while degree should be treated differently. (2) There is a risk of existing functions treating these matrices as though they are coordinates or other features; a more complicated structure would prevent this and require the user to teach the software how to handle PDs.
  
 Existing implementations
 
@@ -179,8 +180,10 @@ Existing implementations
 * GUDHI stores extended PDs as lists of length 4; each element is a GUDHI PD as described above, and they correspond to the ordinary, relative, positive extended, and negative extended types.
  
 One option specific to R is that we make separate classes for ordinary PDs and extended PDs. The ordinary ones could be lists of $p \times 2$ matrices (similar to the scikit-learn structure but with the pairs arranged in matrices), while the extended ones could be quadruples of lists of $p \times 2$ matrices, or maybe lists of quadruples of $p \times 2$ matrices, depending on whether we think dimension/degree or extended type takes precedence. It might be preferable to use quadruples of lists of $p \times 2$ matrices, so that one element extraction of that structure could be nicely coerced into the simpler PD class.
-
 Alternatively, we could use a single structure for both, but it might contain some empty lists when the PD is ordinary.
+Finally, quadruples might instead be triples, with both positive and negative extended persistence pairs grouped together.
+
+
 
 ## Specific Aim 3
 
