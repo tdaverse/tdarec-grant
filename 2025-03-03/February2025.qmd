@@ -23,7 +23,8 @@ affiliations:
 date: 2025 February 28
 format:
     pdf: default
-    html: default
+    html:
+      self-contained: true
 toc: true
 number-sections: true
 bibliography: ../references.bib
