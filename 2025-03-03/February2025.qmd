@@ -42,7 +42,7 @@ Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutatio
 **Aim 3:**
 Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
 
-Most core structure has been completed: {TDAvec} conventions have settled and {tdarec} code generation is complete; {flipr} design has stabilized and {inphr} development has begun; a standard data structure for persistent homology has beed tentatively decided for {phutil}; and the current Ripser code base has been successfully integrated into a draft R package.
+Most core structure has been completed: {TDAvec} conventions have settled and {tdarec} code generation is complete; {flipr} design has stabilized and {inphr} development has begun; a standard data structure for persistent homology has been tentatively decided for {phutil}; and the current Ripser code base has been successfully integrated into a draft R package.
 
 Much development remains to be done, in addition to documentation at several levels (code base, README, website), but we feel confident proposing the following months for CRAN submission (though we cannot guarantee publication): {tdarec} in April, {inphr} in May, and {ripserr} in June.
 We understand from exchanges with Terry Christiani and Jesse Casman that the R Consortium would like to publish one blog post for each package release---which may in fact be more than the number of aims---and we will coordinate with them to provide these posts in tandem with CRAN submissions.
@@ -183,7 +183,12 @@ One option specific to R is that we make separate classes for ordinary PDs and e
 Alternatively, we could use a single structure for both, but it might contain some empty lists when the PD is ordinary.
 Finally, quadruples might instead be triples, with both positive and negative extended persistence pairs grouped together.
 
+::: {.callout-note title="Tentative decision for **tdaverse** data structure" icon="false"}
+* a `persistence` class like that of {plt} (see <https://github.com/corybrunson/plt/blob/main/R/persistence.R>) comprising a list of 2-column matrices;
+* an `extended_persistence` class comprising a quadruple of `persistence` objects: ordinary, relative, extended positive and extended negative;
 
+It is to be noticed that not every member of an `extended_persistence` quadruple would necessarily have the same length, e.g. there may be extended features only up to degree 2 but ordinary features up to degree 3, which makes also an argument in favor of this chosen data structure.
+:::
 
 ## Specific Aim 3
 
