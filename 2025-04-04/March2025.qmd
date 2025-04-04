@@ -1,0 +1,157 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "March Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 March 31
+format:
+    pdf: default
+    html:
+      self-contained: true
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview {-}
+
+To recap, the aims of the project are as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
+Most core structure has been completed: {TDAvec} conventions have settled and {tdarec} code generation is complete; {flipr} design has stabilized and {inphr} development has begun; a standard data structure for persistent homology has been tentatively decided for {phutil}; and the current Ripser code base has been successfully integrated into a draft R package.
+
+Much development remains to be done, in addition to documentation at several levels (code base, README, website), but we feel confident proposing the following months for CRAN submission (though we cannot guarantee publication): {tdarec} in April, {inphr} in May, and {ripserr} in June.
+We understand from exchanges with Terry Christiani and Jesse Casman that the R Consortium would like to publish one blog post for each package release---which may in fact be more than the number of aims---and we will coordinate with them to provide these posts in tandem with CRAN submissions.
+
+## Specific Aim 1
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+
+Collaborators
+
+: * Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
+
+Repositories
+
+: * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+## Specific Aim 2
+
+Key personnel
+
+: - Aymeric Stamm (AST), Research Engineer, CNRS
+
+Collaborators
+
+: - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
+
+Repositories
+
+: * [{phutil}](https://tdaverse.github.io/phutil/)
+* {inphr}
+* [{flipr}](https://permaverse.github.io/flipr/)
+* [{fdatest}](https://permaverse.github.io/fdatest/)
+
+### {flipr} and {fdatest}
+
+Minimal work was put into into it this month as MSI was no longer working on it abd AST dedicated his time to {phutil}.
+
+### {inphr}
+
+This is scheduled for April and we will be focusing on the two sample problem, i.e. comparing the distributions that generated two samples of persistence diagrams.
+
+This will be done either in the space of persistence diagrams themselves or in functional spaces using functional representations of persistence diagrams as provided by [{plt}](https://corybrunson.github.io/plt/). For this latter case, {fdatest} will be updated to use {flipr} permutation capabilities and a new release will be proposed.
+
+### {phutil}
+
+#### The 'persistence' class
+
+We are about to release {phutil} `v0.0.1` featuring the 'persistence' class which, at the moment, is a list of 2 elements:
+
+- `pairs`: A list of 2-column matrices containing birth-death pairs. The
+$i$-*th* element of the list corresponds to the $(i-1)$-*th* homology
+dimension. If there is no pairs for a given dimension but there are pairs in
+higher dimensions, the corresponding element(s) is/are filled with a
+$0 \times 2$ numeric matrix.
+
+- `metadata`: A list of 3 elements containing information about how the data
+was computed:
+
+  - `data`: The name of the object containing the original data on which the
+  persistence data was computed.
+  - `engine`: The name of the package that computed the persistence data.
+  - `simplicial_complex`: The type of simplicial complex used in the
+  computation.
+  - `parameters`: A list of parameters used in the computation.
+  - `call`: The exact call that generated the persistence data.
+
+#### Unit testing
+
+Currently, objects of class `list`, `data.frame`, `matrix`, `diagram` (as provided by `TDA::*Diag()` functions) and `PHom` (as provided by `ripserr::vietoris_rips()` function) can be cast into an object of class 'persistence'. The `format()` and `print()` `S3` specializations are implemented to nicely display key information about the persistence data and how it has been computed, using the [{cli}](https://cli.r-lib.org) and [{rlang}](https://rlang.r-lib.org) packages.
+
+Although not strictly speaking test-driven development (TDD), we adopted the strategy of implementing unit tests right alongside any new implemented function. This allowed us to achieve 100% test coverage on the codebase which should facilitates future updates and releases. We used the [{tinytest}](https://github.com/markvanderloo/tinytest) package fwhich is a lightweight, no-dependency, full-featured package for unit testing. In contrast to [{testthat}](https://testthat.r-lib.org), it does not have dependencies, allowing us to keep our dependency trail at its minimum. We also use [{tinysnapshot}](https://github.com/vincentarelbundock/tinysnapshot) to handle unit testing of `format()` and `print()` methods.
+
+#### Preparing next release
+
+We filed a number of issues that we will shortly address in a next release.
+
+[The 'extended_persistence' class](https://github.com/tdaverse/phutil/issues/4)
+
+: This refers to a class for hosting extended persistence diagram which will be a named list of 4 elements: `Ordinary`, `Relative`, `Negative` and `Positive`. Each element will be an object of class 'persistence'. Metadata should be inherited in a factorized way to avoid duplication.
+
+[Classes for hosting sets of persistence data](https://github.com/tdaverse/phutil/issues/5)
+
+: We aim at performing statistical analyses of sets of (extended) persistence data. As such, we will also defined thew 'persistence_set' and 'extended_persistence_set' which are lists of '(extended_)persistence' objects. This is useful to later define `S3` specializations of methods such as `mean()`, `prcomp()` and so on.
+
+[Persistence engines](https://github.com/tdaverse/phutil/issues/6)
+
+: A set of functions which would take input data in a chosen mathematical form and a chosen data structure for storage, a chosen filtration and a chosen implementation to compute persistence data from and output the desired persistence data. These *engines* would contain all the required metadata to syntactically output valid expressions as well as actually compute the persistence data for compatible inputs. Arguably, these functions could be included in {tdarec} but are also useful to other **tdaverse** packages like [{ggtda}](https://tdaverse.github.io/ggtda/) so {phutil} will be a good place to factorize this code as well.
+
+## Specific Aim 3
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+
+Repositories
+
+: * [KPH Ripser fork](https://github.com/strongKs/ripser/)
+* [AZH Ripser fork](https://github.com/resetdisconnect/ripser/)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+## References {-}
