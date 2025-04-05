@@ -43,10 +43,16 @@ Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutatio
 **Aim 3:**
 Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
 
-Most core structure has been completed: {TDAvec} conventions have settled and {tdarec} code generation is complete; {flipr} design has stabilized and {inphr} development has begun; a standard data structure for persistent homology has been tentatively decided for {phutil}; and the current Ripser code base has been successfully integrated into a draft R package.
+Currently, two packages are ready for CRAN release: {phutil}, a helper package that will grow as utilities shared across the TDAverse are established; and {tdarec}, a Tidymodels extension for machine learning with persistent homology and its vectorizations.
+We plan to submit them in April and have blog posts ready to accompany their publication.
 
-Much development remains to be done, in addition to documentation at several levels (code base, README, website), but we feel confident proposing the following months for CRAN submission (though we cannot guarantee publication): {tdarec} in April, {inphr} in May, and {ripserr} in June.
-We understand from exchanges with Terry Christiani and Jesse Casman that the R Consortium would like to publish one blog post for each package release---which may in fact be more than the number of aims---and we will coordinate with them to provide these posts in tandem with CRAN submissions.
+While not part of this award, the [{plt}](https://corybrunson.github.io/plt/) package, which provides a rich collection of tools for using persistence landscapes [@bubenik2017persistence], will also be submitted to CRAN in the coming month.
+It will then be upgraded soon after to take advantage of the `persistence` class provided by {phutil}, and to address the first round of user feedback.
+
+A {ripserr} upgrade has been submitted to CRAN, though it is not the upgrade supported by this award.
+Several contributions in recent years went unpublished, so we are submitting them with a minor version ahead of the major version that will contain the updated source code and overhaul of the R/C++ interface.
+
+We aim to submit {inphr} at the end of April and the (next) {ripserr} upgrade at the end of May.
 
 ## Specific Aim 1
 
@@ -63,6 +69,30 @@ Repositories
 
 : * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
 * [{tdarec}](https://github.com/corybrunson/tdarec)
+
+### {TDAvec}
+
+UIS and ALU submitted a minor release (0.1.41) that resolves [this issue](https://github.com/uislambekov/TDAvec/issues/6) with the persistence landscape vectorization.
+{tdarec} was written to accommodate the previous behavior (0.1.4) with a warning rather than an error, but this will prevent even that inconvenience.
+
+### {tdarec}
+
+The remaining goals identified for this month have been completed:
+
+* Automatically generate unit tests for step functions
+* Simplify and finalize the Bayesian optimization vignette
+* Complete code generation script for hyperparameter tuners
+
+Additionally, the README example has been better documented.
+
+Two planned features remain to be implemented:
+
+* Design a standalone hyperparameter tuner for the scale sequence (discretization grid)
+* Deploy PH computations to multiple engines
+
+The first will be included in a later release.
+The current release already relieves the user of the burden of specifying a discretization grid, which will be automatically generated during `prep()` if not explicitly provided.
+The second will also be included in a later release---at the latest, once engine dispatch is implemented in {phutil} and it is made a dependency of {tdarec}.
 
 ## Specific Aim 2
 
@@ -92,7 +122,7 @@ Minimal work was put into into it this month as MSI was no longer working on it 
 
 This is scheduled for April and we will be focusing on the two sample problem, i.e. comparing the distributions that generated two samples of persistence diagrams.
 
-This will be done either in the space of persistence diagrams themselves or in functional spaces using functional representations of persistence diagrams as provided by [{plt}](https://corybrunson.github.io/plt/). For this latter case, {fdatest} will be updated to use {flipr} permutation capabilities and a new release will be proposed.
+This will be done either in the space of persistence diagrams themselves or in functional spaces using functional representations of persistence diagrams as provided by {plt}. For this latter case, {fdatest} will be updated to use {flipr} permutation capabilities and a new release will be proposed.
 
 ### {phutil}
 
@@ -152,5 +182,18 @@ Repositories
 : * [KPH Ripser fork](https://github.com/strongKs/ripser/)
 * [AZH Ripser fork](https://github.com/resetdisconnect/ripser/)
 * [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+As described previously, KPH and SHE have produced an installable R package prototype adapted from the new Ripser source code and the old {ripserr} package (0.1.1), while AZH has produced an installable R package prototype build up from scratch around the new Ripser source code.
+The three students spent half of March preparing to present their work at the UF Undergraduate Research Symposium but managed to implement the new input/output procedures necessary for exposing the library to R: passing an input distance matrix to C++, and returning a list of 2-column matrices of persistent pairs to R.
+
+We will focus the month of April on harmonizing their different approaches and implementing them in a new fork of the {ripserr} repository.
+Once the new implementation is validated against the examples and tests of the old, it will be merged in.
+The month of May will be devoted to incorporating code to record and output representative cycles and cocycles.
+Note: Because the previous Ripser source code omitted infinite bars from its output, the upgrade will introduce breaking changes as these bars are included.
+
+Two important features will be omitted from the major {ripserr} upgrade but included in a later release:
+
+* Ripser itself transforms input data into one of two formats that its core functions are designed to work with: flattened distance matrices, which we call "distance vectors", and sparse distance matrices. {ripserr} 0.1.1 and the forthcoming 0.3.0 only deal with distance vectors, so we are limiting our major upgrade to this format as well, but preliminary work toward accommodating sparse matrices is underway.
+* In principle, representative cycles and cocycles could be recorded and returned in Cubical Ripser as well. However, this will require original work on our parts, since this feature was not implemented by the originators [@kaji2020cubical]. Our plan is to mimic its implementation in Ripser (`representative-cycles` and `representative-cocycles` branches) to take advantage of both C++ programs having used the same strategies to increase efficiency [@bauer2021ripser], but we cannot expect to complete this work during the funding period.
 
 ## References {-}
