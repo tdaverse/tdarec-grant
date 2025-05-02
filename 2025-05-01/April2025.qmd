@@ -1,0 +1,126 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "April Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 May 1
+format:
+    pdf: default
+    html:
+      self-contained: true
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview {-}
+
+To recap, the aims of the project are as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
+In order to simplify the release schedule, we decided to add an important additional feature to {phutil} (Wasserstein distances).
+This delayed package releases and blog posts, which will be coordinated this week and next.
+The blogs will coincide with two CRAN submissions, {phutil} and {tdarec}.
+({plt} will be submitted once it is revised to add {phutil} as a dependency, which should also be this month.)
+We still aim to submit {inphr} at the end of April and the {ripserr} upgrade at the end of May.
+
+## Specific Aim 1
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+
+Collaborators
+
+: * Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
+
+Repositories
+
+: * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+### {TDAvec}
+
+UIS and ALU have built a Python wrapper into the package, but this upgrade does not directly support this project and did not introduce conflicts with {tdarec}.
+
+### {tdarec}
+
+[A draft blog post](https://github.com/tdaverse/tdarec/blob/main/sandbox/tdarec-blog.qmd) will serve to announce both {TDAvec} and {tdarec} to the R community.
+We will provide Jesse Casman a completed blog post and publication schedule immediately after {phutil} is published.
+
+We have decided to implement PH engine dispatch in a future release of {phutil}.
+Once published, {tdarec} and another Tidyverse extension, {ggtda}, will be updated to depend on this implementation, reducing duplication and easing the incorporation of additional engines in future.
+
+Scale sequence hyperparameter tuning remains an outstanding feature that will be implemented in a future release.
+
+## Specific Aim 2
+
+Key personnel
+
+: - Aymeric Stamm (AST), Research Engineer, CNRS
+
+Collaborators
+
+: - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
+
+Repositories
+
+: * [{phutil}](https://tdaverse.github.io/phutil/)
+* {inphr}
+* [{flipr}](https://permaverse.github.io/flipr/)
+* [{fdatest}](https://permaverse.github.io/fdatest/)
+
+
+
+## Specific Aim 3
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+
+Repositories
+
+: * [KPH Ripser fork](https://github.com/strongKs/ripser/)
+* [AZH Ripser fork](https://github.com/resetdisconnect/ripser/)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+SHE, AZH, and KPH have decided on how to harmonize their two approaches to repackaging Ripser in R; see the March progress report for details.
+For the most part, the straight C++ code will come from AZH's fork, which began from the current Ripser codebase, and the code interfacing with R will come from SHE and KPH’s fork, which was adapted from {ripserr} version 0.2.0 (never published on CRAN).
+They have only just completed final exams, so will spend May assembling these in a new fork.
+
+Concurrently, JCB will write R-side code to transform and otherwise pre-process data ahead of passing R objects to exposed C++ functions; this is made necessary by changes to Ripser since it was originally built into {ripserr}.
+We anticipate having an installable package by the end of May, though documentation updates, debugging, and other housekeeping may push CRAN submission into June.
+
+## References {-}
