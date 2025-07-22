@@ -1,0 +1,125 @@
+---
+title: "Modular, interoperable, and extensible topological data analysis in R"
+subtitle: "Final Progress Report"
+author:
+  - name: Jason Cory Brunson
+    affiliations:
+      - ref: uf
+    corresponding: true
+  - name: Aymeric Stamm
+    affiliations: 
+      - ref: lmjl
+affiliations:
+  - id: lmjl
+    name: UMR CNRS 6629, Nantes University, Ecole Centrale de Nantes
+    department: Department of Mathematics Jean Leray
+    city: Nantes
+    country: France
+  - id: uf
+    name: University of Florida
+    department: Laboratory for Systems Medicine, Division of Pulmonary, Critical Care, and Sleep Medicine
+    city: Gainesville
+    country: United States
+date: 2025 May 1
+format:
+    pdf: default
+    html:
+      self-contained: true
+toc: true
+number-sections: true
+bibliography: ../references.bib
+---
+
+## Overview {-}
+
+The aims of the project were as follows:
+
+**Aim 1:**
+Publish a [{recipes}](https://recipes.tidymodels.org) extension for ML vectorizations based on persistent homology.
+
+**Aim 2:**
+Publish a [{flipr}](https://lmjl-alea.github.io/flipr/) extension for permutation-based statistical inference on topological data, compatible with Tidymodels workflows.
+
+**Aim 3:**
+Refactor [{ripserr}](https://github.com/tdaverse/ripserr/) with a current implementation of Ripser and connect additional options to R.
+
+Here we summarize the work completed since the April progress report and concluding the funded component of the larger project.
+We thank the R Consortium for its flexibility with final deadlines.
+
+## Specific Aim 1
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, University of Florida (UF)
+
+Collaborators
+
+: * Umar Islambekov (UIS), Assistant Professor of Data Science, Bowling Green State University (BGSU)
+* Aleksei Luchinsky (ALU), Graduate Research Assistant in Data Science, BGSU
+
+Repositories
+
+: * [{TDAvec}](https://github.com/uislambekov/TDAvec/)
+* [{tdarec}](https://github.com/corybrunson/tdarec)
+
+### {TDAvec}
+
+UIS and ALU have submitted a short manuscript to the _Journal of Open Source Software_.
+While not connected to this project, this indicates that the package is in a relatively stable form and that future updates will not introduce compatibility problems with {tdarec}.
+
+### {tdarec}
+
+A Tidymodels maintainer, Emil Hvitfeldt, raised several design issues on the GitHub repository.
+As these are addressed, {tdarec} becomes better harmonized with {recipes} and the rest of the Tidymodels collection.
+This is also a positive sign that the developer base is interested in this contribution and wants it to succeed.
+While users have not yet begun raising issues, [the {cranlogs} badge](https://cranlogs.r-pkg.org/badges/tdarec) reports a download rate of 227/month. (For comparison, it currently reports [1234/month](https://cranlogs.r-pkg.org/badges/embed) and [810/month](https://cranlogs.r-pkg.org/badges/textrecipes) for the in-house {recipes} extensions {embed} and {textrecipes}.)
+
+## Specific Aim 2
+
+Key personnel
+
+: - Aymeric Stamm (AST), Research Engineer, CNRS
+
+Collaborators
+
+: - Matthieu Carrière (MCA), Research Scientist, DataShape team, Centre Inria d'Université Côte d'Azur
+- Bertrand Michel (BMI), Full Professor of Statistics, Ecole Centrale de Nantes
+- Alessia Pini (API), Associate Professor of Statistics, Università Cattolica del Sacro Cuore
+- Simone Vantini (SVA), Full Professor of Statistics, Politecnico di Milano
+
+Repositories
+
+: * [{phutil}](https://tdaverse.github.io/phutil/)
+* {inphr}
+* [{flipr}](https://permaverse.github.io/flipr/)
+* [{fdatest}](https://permaverse.github.io/fdatest/)
+
+
+
+## Specific Aim 3
+
+Key personnel
+
+: * Jason Cory Brunson (JBR), Assistant Professor of Medicine, UF
+* Alice Zhang (AZH), Undergraduate Research Assistant in CISE, UF
+* Kent Phipps (KPH), Undergraduate Research Assistant in Computer and Information Science and Engineering (CISE), UF
+* Sean Hershkowitz (SHE), Undergraduate Research Assistant in CISE, UF
+
+Repositories
+
+: * [KPH Ripser fork](https://github.com/strongKs/ripser/)
+* [AZH Ripser fork](https://github.com/resetdisconnect/ripser/)
+* [JBR Ripser fork](https://github.com/corybrunson/ripser/)
+* [{ripserr}](https://github.com/tdaverse/ripserr/)
+
+[{ripserr}](https://cran.r-project.org/package=ripserr) v1.0.0 is on CRAN, with the current Ripser code base in place of the previous version. This release was designed to change as little as possible other than the code base---several aspects of the API and documentation remain to be improved---though we believe it did resolve an outstanding issue raised years ago by a user ([#30](https://github.com/tdaverse/ripserr/issues/30)). The current download rate is reported as 325/month, though {ripserr} has been on CRAN since 2020 and we neglected to record download rates prior to the upgrade.
+
+[The `ripserq` branch](https://github.com/corybrunson/ripser/tree/ripserq) in JBR's `ripser` fork will serve as a testing ground for future changes to the Ripser code base prior to implementation in {ripserr}. This fork was minimally modified from the source, based on the culmination of experimental work in several branches of KPH's and AZH's forks. This unfortunately obscures the student's contributions, but they have been added as authors to the R package.
+
+Several additional enhancements are in the works. Those on the R side will be developed in branches of the TDAverse `ripserr` repo, while those on the C++ side will first be developed in branches of JBR's `ripser` fork for debugging and testing before being implemented more straightforwardly in the TDAverse repo. JBR, SHE, KPH, and AZH have compiled a list in a shared Google Doc, and these will be raised as public issues in the coming month. (Nearest to completion is the use of `NA_real_` rather than `Inf` to encode death values beyond a user-specified threshold; see the [`ripserq-missing` subbranch](https://github.com/corybrunson/ripser/tree/ripserq-missing).)
+
+## Conclusion {-}
+
+
+
+## References {-}
