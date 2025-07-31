@@ -78,7 +78,8 @@ While users have not yet begun raising issues, [the {cranlogs} badge](https://cr
 
 Key personnel
 
-: - Aymeric Stamm (AST), Research Engineer, CNRS
+: - Manon Simonot (MSI), Statistical Engineer, National Centre for Scientific Research (CNRS)
+- Aymeric Stamm (AST), Research Engineer, CNRS
 
 Collaborators
 
@@ -90,11 +91,138 @@ Collaborators
 Repositories
 
 : * [{phutil}](https://tdaverse.github.io/phutil/)
-* {inphr}
 * [{flipr}](https://permaverse.github.io/flipr/)
+* [{inphr}](https://tdaverse.github.io/inphr/)
 * [{fdatest}](https://permaverse.github.io/fdatest/)
 
+### {phutil}
 
+The [{phutil}](https://tdaverse.github.io/phutil/) package has been released on CRAN since May 15th, 2025. It serves as a low-level package that defines a unifying toolbox for handling persistent homology data. To achieve such a goal, {phutil} currently integrates:
+
+- A 'persistence' class as described in the previous monthly report; specifically, the following `S3` methods for objects of class `persistence` have been implemented:
+
+    - coercers from matrix, data.frame, objects of class 'diagram' as produced by `TDA::*Diag()` functions, objects of class 'PHom' as produced by `ripserr::vietoris_rips()` and objects of class 'hclust' as produced by `stats::hclust()`;
+    - `format()` and `print()` which use the MIT-licensed [{cli}](https://cli.r-lib.org) package behind the scene for printing out to the console a nice colourful but brief summary of the persistence data;
+    - `get_pairs()` to extract homological features from a specific dimension;
+    - reverse coercers to go back to either matrix or data.frame representations.
+
+- A 'persistence_set' class which is for now simply a list of objects of class 'persistence'.
+
+- Functions to compute bottleneck and Wasserstein distances either between two persistence diagrams or in a pairwise fashion from a set of persistence diagrams. The underlying computation is actually performed via the BSD-licensed [*Hera*](https://github.com/anigmetov/hera) C++ library. The latter library is bundled within {phutil} which required a `LinkingTo` dependency on [{BH}](https://dirk.eddelbuettel.com/code/bh.html) for providing access to the Boost headers for Hera compilation. To this end, the required Boost licensing terms have been copied over with the MIT license terms which {phutil} depends on. Specifically, the following functions are available:
+
+    - `bottleneck_distance()` and `wasserstein_distance()` compute the eponymous distance between two diagrams;
+    - `bottleneck_pairwise_distances()` and `wasserstein_pairwise_distances()` compute pairwise distances among a sample of persistence diagrams; these functions have their C++ code parallelized via [OpenMP](https://www.openmp.org); to that end, they gain an optional `ncores` argument which is `1L` by default.
+
+A formal definition and study of bottleneck and Wasserstein distances can be found in @bubenik2023exact. Their implementation in {phutil} relies on the C++ Hera library developed by @kerber2017geometry.
+
+Design choices were carefully made after numerous discussions with experts in the field of topological data analysis such as Matthieu Carrière, Bertrand Michel and Paul Rosen. While users have not yet begun raising issues, the {cranlogs} badge reports a download rate of [497/month](https://cranlogs.r-pkg.org/badges/phutil). Other core developers of the TDAverse have been filing issues to faciliate development of downstream packages such as {plt}, {TDAvec} and consequently, {tdarec} and {inphr}. The development of {phutil} has been mainly carried out by AST with thorough reviews from JBR.
+
+### {flipr}
+
+The [{flipr}](https://permaverse.github.io/flipr/) package is the building block of the [permaverse](https://github.com/permaverse), which is a collection of packages meant for making inference on complex data using permutation theory. Most of the resources on this package have been spent to add permutation schemes for (M)ANOVA and regression in a way that is generic enough to be adapted to any kind of input data as the original design was thought for the two-sample testing problem only. In the course of this funding, the development of {flipr} has been mainly carried out by MSI with thorough reviews from AST.
+
+#### Overview
+
+The goal of {flipr} is to provide a flexible framework for making inference via permutation. The idea is to promote the permutation framework as an incredibly well-suited tool for inference on complex data. You supply your data, as complex as it might be, in the form of lists in which each entry stores one data point in a representation that suits you and {flipr} takes care of the permutation magic and provides you with either point estimates or confidence regions or p-value of hypothesis tests. Permutation tests are especially appealing because they are exact no matter how small or big your sample sizes are. You can also use the so-called non-parametric combination approach in this setting to combine several statistics to better target the alternative hypothesis you are testing against. Asymptotic consistency is also guaranteed under mild conditions on the statistic you use. The {flipr} package provides a flexible permutation framework for making inference such as point estimation, confidence intervals or hypothesis testing, on any kind of data, be it univariate, multivariate, or more complex such as network-valued data, topological data, functional data or density-valued data. The {cranlogs} badge reports a current download rate of [242/month](https://cranlogs.r-pkg.org/badges/flipr).
+
+#### ANOVA
+
+Implementation of permutation schemes for (M)ANOVA has been completed. User can now perform tests on $k$ samples, $k > 2$ to get the entire plausibility function. User can pass data in the plausibility function as two possible formats:
+
+- An object with all samples and a factor containing group memberships.
+- Each sample representing a group. Samples can be univariate or multivariate.
+
+![3D Visualization of the plausibility function from the differences in mean between three different specis of chicken. Data is `chickwts` from the {datasets} package.](anova-pf.png){#fig-anova-pf}
+
+@fig-anova-pf shows the plausibility function resulting from an ANOVA on 3 univariate samples, to test the equality between the mean of each sample.
+A vignette has been added to show users how to perform ANOVA for multivariate data and tests have been added to the package to maintain coverage.
+The use of a data frame in the `$get_value()` method of the plausibility function class may need to be changed to make it more generic for other types of input data.
+
+#### Vignettes in Quarto
+
+All vignettes have been converted from Rmarkdown to Quarto. There is still an issue to build the website with pkgdown on GitHub (see [#26](https://github.com/permaverse/flipr/issues/26)).
+
+#### Regression
+
+Tests on regression coefficients have been implemented in {flipr} to perform two types of tests:
+
+- Test of the effect of one coefficient (with the t-statistic).
+- Global test on all coefficients (with the F-statistic).
+
+A new format has been added to `convert_to_list()` that returns a list of 3 elements: response variable, qualitative variables, other variables.This new case is handled in `get_value()` to call the new function `regression_test()`. 
+For test on one coefficient, the residuals of the reduced model are permuted.
+For global test, the response is permuted.
+
+There are now two implemented statistics for linear models:
+
+- `stat_lm()` for tests on one coefficient.
+- `stat_lm_global()` for global tests.
+
+Tests on regression coefficients are a little different than the other already implemented tests. The null specification needs to have three arguments: the response variable, the regressors and the parameters. The implementation uses named lists to link the index of the coefficient to test with its parameter value, and to differentiate global tests with tests on one coefficient.
+
+For now, the global test does not work yet to compute the entire plausibility function. Test for one coefficient works but there is a strange phenomenon happening with the shape of the plausibility function that has to be investigated. A vignette has been written to show how to perform the tests with an example of null specification for linear models and shows the encountered issue.
+
+#### Design choices
+
+Two downsides of the current implementation are:
+
+- for ANOVA to rely on the data frame structure which might not work well with all data formats that external users might want to use {flipr} with;
+- for regression, it forces to implement statistic functions with three arguments while they only have two for one-sample, two-sample and ANOVA cases; also the current implementation requires named list for the `parameters` argument to keep track on which coefficient is under investigation which is not optimal.
+
+Next steps are with high probability to switch to the `formula` approach which allows one to clearly specify the model and refer to the coefficients in a structured way. All 4 cases (one-sample, two-sample, ANOVA, regression) could be handled via the pair formula and permuted indices which would make for a nice common interface.
+
+### {inphr}
+
+The goal of [{inphr}](https://tdaverse.github.io/inphr/) is to provide a set of functions for performing null hypothesis testing on samples of persistence diagrams using the theory of permutations. Currently, only two-sample testing is implemented. Inputs can be either samples of persistence diagrams themselves or functional representations of persistence diagrams. In the former case, they are embedded in a metric space using either the Bottleneck or Wasserstein distance. In the former case, persistence data becomes functional data and inference is performed using tools available in the [{fdatest}](https://permaverse.github.io/fdatest/) package. The development of {inphr} has been mainly carried out by AST. It has been submitted to CRAN on July 31st, 2025. There is therefore no current statistic on the number of downloads.
+
+#### Current features
+
+The package currently exposes two main functions which test if two samples of PH data have been generated from the same distribution:
+
+- [`two_sample_diagram_test()`](https://tdaverse.github.io/inphr/reference/two_sample_diagram_test.html) works in the space of diagrams, using test statistics based on inter-point distances only.
+- [`two_sample_functional_test()`](https://tdaverse.github.io/inphr/reference/two_sample_functional_test.html) works in a functional space (one of Betti, Euler characteristic, normalized life, silhouette or entropy) and uses interval-wise testing (providing strong control of familywise error rate) to output on which portions of the scale sequence does the difference occur.
+
+#### Dependencies
+
+Messages, warnings and errors are relayed to the user using the
+[{rlang}](https://rlang.r-lib.org) package and the
+[{cli}](https://cli.r-lib.org) package which are both licensed under the MIT
+license and with no dependency trail.
+
+Inference in the space of diagrams is performed thanks to the combination of
+[{phutil}](https://cran.r-project.org/package=phutil) which computes distances between diagrams in an efficient manner and
+[{flipr}](https://cran.r-project.org/package=flipr) which powers the permutation schemes and test statistics based on
+inter-point distances.
+
+Inference in functional spaces is performed thanks to the combination of
+[{TDAvec}](https://cran.r-project.org/package=TDAvec) which provides the suitable PH vectorization and [{fdatest}](https://cran.r-project.org/package=fdatest) which
+powers the interval-wise testing procedure for functional data.
+
+### {fdatest}
+
+Inference for functional representations of persistence homology in {inphr} is a by-product of the inferential procedures implemented in the [{fdatest}](https://permaverse.github.io/fdatest/) package. This package implements domain-selection for functional data [@abramowicz2023domain;@pini2017interval] which essentially detects on which portion of the domain do curves statistically differ.
+
+During the course of this funding, the following tasks have been achieved:
+
+- Replace all equals in code with assignment operator `<-`;
+- All ITP functions are now deprecated;
+- The package has an official website;
+- Continuous integration has been added to run `R CMD check` on PRs and pushes to the main branch, as well as to monitor unit testing coverage progress and to automatically update the website when needed;
+- A `README` has been added with a minimal usecase;
+- The use of `data()` has been removed;
+- A GPL-3 license has been added at the moment as other dependencies are GPL-like;
+- The package now uses [{cli}](https://cli.r-lib.org) to power nicely displayed messages, warnings and errors to the console.
+
+During the course of this funding, the following tasks have been started and are ongoing:
+
+- Remove `\code{}` in favour of markdown syntax in documentation;
+- Clarify the API;
+- Redo all the documentation with inheritance;
+- Implement unit tests;
+- Move references to fdatest-package.R file;
+- Integrate dependency to {flipr} to handle permutation schemes: that last goal will be done **after** unit tests have been implemented and ANOVA and regression permutation schemes added to {flipr}.
+
+The development of {fdatest} has been mainly carried out by AST while the original creators and authors are collaborators API and SVA. They have transferred ownership of the repository to the permaverse organization and the package is currently maintained by AST. The {cranlogs} badage currently reports a download rate of [319/month](https://cranlogs.r-pkg.org/badges/fdatest).
 
 ## Specific Aim 3
 
