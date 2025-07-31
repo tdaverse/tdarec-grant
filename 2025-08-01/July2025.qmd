@@ -248,6 +248,46 @@ Several additional enhancements are in the works. Those on the R side will be de
 
 ## Conclusion {-}
 
+In this section we'll offer reflections on how we calibrated the amount and period of the award to the proposed work, a summary of near-term work remaining to be done on the products of work, and an outlook on longer-term development on the collection.
+
+### Calibration of proposal {-}
+
+JBR found the 8-month period well-timed for the proposed work.
+The prototype of {tdarec} took slightly less time than expected, while its expansion to CRAN-readiness took slightly more.
+Integration with the Tidymodels collection was smooth, whereas automatic code generation from {TDAvec} required more time but was instructive as well as expediting secondary upgrades (in response to upgrades to this dependency).
+
+Bringing on 3 research assistants rather than 1 was extremely valuable:
+The more collaborative process generated greater enthusiasm, enabled division of labor, and produced more robust solutions.
+However, it required some uncompensated time from all parties.
+Future proposals will more clearly demarcate plans for solo PI (or single-RA) effort versus multi-student effort that carries the additional benefit and cost of collaborative research experience.
+
+
+
+### Short-term goals {-}
+
+Specific to the TDAverse, JBR will focus the remainder of the year toward submitting several new packages to CRAN:
+
+* [{ggtda}](https://github.com/tdaverse/ggtda), a {ggplot2} extension for persistence data in collaboration with James Otto;
+* [{plt}](https://github.com/corybrunson/plt), an R port to the [Persistence Landscapes Toolbox](https://www2.math.upenn.edu/~dlotko/persistenceLandscape.html) C++ library by Paweł Dłotko; and
+* a yet-unnamed R port to the [`ReebGraphPairing`](https://github.com/USFDataVisualization/ReebGraphPairing) Java library by Junyi Tu, Mustafa Hajij, and Paul Rosen.
+
+These packages will be upgraded to depend on {phutil} for handling persistence diagrams and, in the case of {ggtda} as with {tdarec}, deployment of engines (including {ripserr} for point clouds and images and the `ReebGraphPairing` port for Reeb graphs) to compute persistent homology.
+Smooth interoperation will be ensured and demonstrated between {plt} and {inphr} to run permutation tests on persistence landscapes.
+
+
+
+### Long-term outlook {-}
+
+JBR views the next long-term objective of the TDAverse as the reconciliation of [{Mapper}](https://github.com/peekxc/Mapper/) with the most recent [{simplextree}](https://cran.r-project.org/package=simplextree) version (both led by Matt Piekenbrock) and the further development of a package collection to make these more exploratory and interactive tools available to R users.
+Specifically:
+
+* {Mapper} must be refactored at the C++ level to accommodate changes in {simplextree} version 1.0.1;
+* {Cover}, a long-discussed standalone package for methods of generating topological covers for data sets, should be spun off from {Mapper};
+* a {Mapper} extension to build and analyze a broader menagerie of "Mapper-like" constructions such as joint contour nets and extended Reeb graphs [@carriere2018structure]; and
+* {tidyplex}, a conceived analog of {tidygraph} for simplicial complexes, may be built to wrap various encodings of simplicial complexes (including by {TDA}, {simplextree}, and others; see [{interplex}](https://cran.r-project.org/package=interplex)) to be elegantly printed and annotated.
+
+This effort will probably require dedicated funding and the interest of prospective additional maintainers.
+
 
 
 ## References {-}
