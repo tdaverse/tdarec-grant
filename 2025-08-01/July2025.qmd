@@ -261,7 +261,7 @@ The more collaborative process generated greater enthusiasm, enabled division of
 However, it required some uncompensated time from all parties.
 Future proposals will more clearly demarcate plans for solo PI (or single-RA) effort versus multi-student effort that carries the additional benefit and cost of collaborative research experience.
 
-
+AST also found the 8-month period well-timed for the proposed work although time dedicated to the funded project could not be linear for him as it had to be included among other ongoing projects. It was very beneficial to bring on a statistical engineer (MSI) who could work full time on the project. However, the amount of the grant allowed to hire her for only two full months, which she dedicated working on {flipr} while AST focused on TDAverse packages.
 
 ### Short-term goals {-}
 
@@ -274,7 +274,15 @@ Specific to the TDAverse, JBR will focus the remainder of the year toward submit
 These packages will be upgraded to depend on {phutil} for handling persistence diagrams and, in the case of {ggtda} as with {tdarec}, deployment of engines (including {ripserr} for point clouds and images and the `ReebGraphPairing` port for Reeb graphs) to compute persistent homology.
 Smooth interoperation will be ensured and demonstrated between {plt} and {inphr} to run permutation tests on persistence landscapes.
 
+AST plans to improve and add more tools for making inference on populations of persistence diagrams. Specifically, this means putting a focus on core permaverse packages such as {flipr} and {fdatest}. The former needs a deeper reflection on its API and how it can accommodate any type of data for (M)ANOVA and regression problems. The latter is outdated by more recent domain-selection inferential methods [@abramowicz2023domain] and must be upgraded accordingly. AST plans to make this upgrade by the end of the year and bring {inphr} up to date accordingly.
 
+The inferential part of the TDAverse could also benefit from the following improvements:
+
+- integration with {infer} / tidymodels in general;
+- more documentation for introducing users to 
+
+	- permutation testing and in particular non-parametric combination;
+	- domain-selection testing methods.
 
 ### Long-term outlook {-}
 
@@ -288,6 +296,10 @@ Specifically:
 
 This effort will probably require dedicated funding and the interest of prospective additional maintainers.
 
+AST views his main contribution to the TDAverse ecosystem on the inferential aspects. Long-term objectives he foresees as important contributions will be:
 
+- working on confidence regions (as part of the {inphr} package);
+- developing yet unnamed package(s) for clustering persistence diagrams (or functional representations of PDs) and performing PCA on samples of PDs;
+- contributing to {tdarec} to add these steps as possible recipes in ML pipelines via the Tidymodels framework.
 
 ## References {-}
